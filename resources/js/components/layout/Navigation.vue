@@ -10,7 +10,7 @@
         <hr>
         <ul class="nav nav-pills flex-column mb-auto">
             <li class="nav-item">
-                <inertia-link href="#" class="nav-link text-white" aria-current="page">
+                <inertia-link href="/test" class="nav-link text-white" aria-current="page">
                     <i class="bi-building"></i> Departments
                 </inertia-link>
             </li>
