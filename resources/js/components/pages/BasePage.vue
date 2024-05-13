@@ -1,14 +1,16 @@
-<script setup>
+<script setup lang="ts">
 import Navigation from "../layout/Navigation.vue";
 import {ref} from 'vue';
 
-const date = ref("");
+const date = ref("" as string);
 
-defineProps(["title"]);
+defineProps<{
+    title: string
+}>();
 
 setInterval(() => {
     time()
-})
+}, 1000)
 
 const time = () => date.value = new Date().toLocaleString();
 
