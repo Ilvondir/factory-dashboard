@@ -2,7 +2,7 @@
 import Navigation from "../layout/Navigation.vue";
 import {ref} from 'vue';
 
-const date = ref("" as string);
+const date = ref(new Date().toLocaleString() as string);
 
 defineProps<{
     title: string
