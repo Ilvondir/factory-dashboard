@@ -1,5 +1,11 @@
-<script setup>
+<script setup lang="ts">
+import {usePage} from "@inertiajs/vue3";
+import {User} from "@/models/user";
 
+const page = usePage();
+
+// @ts-ignore
+const user: User = page.props.user;
 </script>
 
 <template>
@@ -17,36 +23,40 @@
                     <i class="bi-gear"></i> Manufactory
                 </a>
                 <div class="collapse" id="manufactory-collapse" style="padding-left: 15px">
-                    <li class="nav-item">
-                        <inertia-link href="/" class="nav-link text-white" aria-current="page">
-                            <i class="bi-building"></i> Departments
-                        </inertia-link>
-                    </li>
-                    <li class="nav-item">
-                        <inertia-link href="#" class="nav-link text-white" aria-current="page">
-                            <i class="bi-journal-bookmark"></i> Positions
-                        </inertia-link>
-                    </li>
-                    <li class="nav-item">
-                        <inertia-link href="#" class="nav-link text-white" aria-current="page">
-                            <i class="bi-people"></i> Workers
-                        </inertia-link>
-                    </li>
-                    <li>
-                        <inertia-link href="/" class="nav-link text-white">
-                            <i class="bi-box-seam"></i> Materials
-                        </inertia-link>
-                    </li>
-                    <li>
-                        <inertia-link href="#" class="nav-link text-white">
-                            <i class="bi-file-bar-graph"></i> Products
-                        </inertia-link>
-                    </li>
+                    <ul class="m-0 p-0" style="list-style-type: none">
+                        <li class="nav-item">
+                            <inertia-link href="/" class="nav-link text-white" aria-current="page">
+                                <i class="bi-building"></i> Departments
+                            </inertia-link>
+                        </li>
+                        <li class="nav-item">
+                            <inertia-link href="#" class="nav-link text-white" aria-current="page">
+                                <i class="bi-journal-bookmark"></i> Positions
+                            </inertia-link>
+                        </li>
+                        <li class="nav-item">
+                            <inertia-link href="#" class="nav-link text-white" aria-current="page">
+                                <i class="bi-people"></i> Workers
+                            </inertia-link>
+                        </li>
+                        <li>
+                            <inertia-link href="/" class="nav-link text-white">
+                                <i class="bi-box-seam"></i> Materials
+                            </inertia-link>
+                        </li>
+                        <li>
+                            <inertia-link href="#" class="nav-link text-white">
+                                <i class="bi-file-bar-graph"></i> Products
+                            </inertia-link>
+                        </li>
+                    </ul>
                 </div>
             </li>
 
 
-            <hr>
+            <li>
+                <hr>
+            </li>
 
 
             <li class="mb-1 nav-item">
@@ -55,16 +65,18 @@
                     <i class="bi-device-ssd"></i> System
                 </a>
                 <div class="collapse" id="system-collapse" style="padding-left: 15px">
-                    <li class="nav-item">
-                        <inertia-link href="#" class="nav-link text-white" aria-current="page">
-                            <i class="bi-file-earmark-person"></i> Users
-                        </inertia-link>
-                    </li>
-                    <li>
-                        <inertia-link href="/" class="nav-link text-white">
-                            <i class="bi-list-columns-reverse"></i> Logs
-                        </inertia-link>
-                    </li>
+                    <ul class="m-0 p-0" style="list-style-type: none">
+                        <li class="nav-item">
+                            <inertia-link href="#" class="nav-link text-white" aria-current="page">
+                                <i class="bi-file-earmark-person"></i> Users
+                            </inertia-link>
+                        </li>
+                        <li>
+                            <inertia-link href="/" class="nav-link text-white">
+                                <i class="bi-list-columns-reverse"></i> Logs
+                            </inertia-link>
+                        </li>
+                    </ul>
                 </div>
             </li>
 
@@ -74,10 +86,11 @@
             <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
                id="dropdown-user" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="bi bi-person display-6"></i>
-                <strong>User</strong>
+
+                <strong>{{ user.first_name + " " + user.last_name }}</strong>
             </a>
             <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdown-user">
-                <li class="dropdown-item">You are <strong>admin</strong>.</li>
+                <li class="dropdown-item">You are <strong>{{ user.role.name }}</strong>.</li>
                 <li>
                     <hr class="dropdown-divider">
                 </li>
