@@ -1,11 +1,15 @@
 <script setup lang="ts">
-import {usePage} from "@inertiajs/vue3";
+import {router, usePage} from "@inertiajs/vue3";
 import {User} from "@/models/user";
 
 const page = usePage();
 
 // @ts-ignore
 const user: User = page.props.user;
+
+const logout = () => {
+    router.post("/logout");
+}
 </script>
 
 <template>
@@ -94,7 +98,11 @@ const user: User = page.props.user;
                 <li>
                     <hr class="dropdown-divider">
                 </li>
-                <li><a class="dropdown-item" href="#">Logout</a></li>
+                <li>
+                    <form @submit.prevent="logout">
+                        <input type="submit" class="dropdown-item" value="Logout">
+                    </form>
+                </li>
             </ul>
         </div>
     </div>
