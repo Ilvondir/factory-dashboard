@@ -18,7 +18,7 @@
                 </a>
                 <div class="collapse" id="manufactory-collapse" style="padding-left: 15px">
                     <li class="nav-item">
-                        <inertia-link href="/test" class="nav-link text-white" aria-current="page">
+                        <inertia-link href="/" class="nav-link text-white" aria-current="page">
                             <i class="bi-building"></i> Departments
                         </inertia-link>
                     </li>
