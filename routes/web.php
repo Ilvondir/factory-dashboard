@@ -3,6 +3,13 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Middleware\RedirectToHomeIfLogin;
 use App\Http\Middleware\RedirectToLoginIfNotLogin;
+use App\Models\Department;
+use App\Models\Position;
+use App\Models\Worker;
+use App\Models\Log;
+use App\Models\User;
+use App\Models\Product;
+use App\Models\Material;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -19,7 +26,17 @@ Route::middleware(RedirectToLoginIfNotLogin::class)->group(function () {
     });
 
     Route::get('/home', function () {
-        return Inertia::render('Home');
+
+
+        return Inertia::render('Home', [
+            "departments" => Department::count(),
+            "positions" => Position::count(),
+            "workers" => Worker::count(),
+            "materials" => Material::count(),
+            "products" => Product::count(),
+            "users" => User::count(),
+            "logs" => Log::count(),
+        ]);
     })->name("home");
 });
 

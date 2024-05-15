@@ -26,7 +26,7 @@ const logout = () => {
                    data-bs-target="#manufactory-collapse" aria-expanded="true">
                     <i class="bi-gear"></i> Manufactory
                 </a>
-                <div class="collapse" id="manufactory-collapse" style="padding-left: 15px">
+                <div class="collapse show" id="manufactory-collapse" style="padding-left: 15px">
                     <ul class="m-0 p-0" style="list-style-type: none">
                         <li class="nav-item">
                             <inertia-link href="/" class="nav-link text-white" aria-current="page">
@@ -68,7 +68,7 @@ const logout = () => {
                    data-bs-target="#system-collapse" aria-expanded="true">
                     <i class="bi-device-ssd"></i> System
                 </a>
-                <div class="collapse" id="system-collapse" style="padding-left: 15px">
+                <div class="collapse show" id="system-collapse" style="padding-left: 15px">
                     <ul class="m-0 p-0" style="list-style-type: none">
                         <li class="nav-item">
                             <inertia-link href="#" class="nav-link text-white" aria-current="page">
