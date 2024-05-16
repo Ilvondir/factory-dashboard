@@ -14,12 +14,18 @@ const logout = () => {
 
 <template>
     <div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark" style="width: 280px; position:fixed; height: 100vh">
-        <inertia-link href="/"
+        <inertia-link href="/home"
                       class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
             <span class="fs-3"><i class="bi-buildings-fill"></i> Factory</span>
         </inertia-link>
         <hr>
         <ul class="nav nav-pills flex-column mb-auto">
+
+            <li class="mb-1 nav-item">
+                <inertia-link href="/home" class="btn btn-toggle align-items-center rounded text-white fs-5">
+                    <i class="bi-house"></i> Home
+                </inertia-link>
+            </li>
 
             <li class="mb-1 nav-item">
                 <a class="btn btn-toggle align-items-center rounded text-white fs-5" data-bs-toggle="collapse"
@@ -29,7 +35,7 @@ const logout = () => {
                 <div class="collapse show" id="manufactory-collapse" style="padding-left: 15px">
                     <ul class="m-0 p-0" style="list-style-type: none">
                         <li class="nav-item">
-                            <inertia-link href="/" class="nav-link text-white" aria-current="page">
+                            <inertia-link href="/departments" class="nav-link text-white" aria-current="page">
                                 <i class="bi-building"></i> Departments
                             </inertia-link>
                         </li>
@@ -55,11 +61,6 @@ const logout = () => {
                         </li>
                     </ul>
                 </div>
-            </li>
-
-
-            <li>
-                <hr>
             </li>
 
 

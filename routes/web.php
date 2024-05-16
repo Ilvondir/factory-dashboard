@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DepartmentController;
 use App\Http\Middleware\RedirectToHomeIfLogin;
 use App\Http\Middleware\RedirectToLoginIfNotLogin;
 use App\Models\Department;
@@ -26,8 +27,6 @@ Route::middleware(RedirectToLoginIfNotLogin::class)->group(function () {
     });
 
     Route::get('/home', function () {
-
-
         return Inertia::render('Home', [
             "departments" => Department::count(),
             "positions" => Position::count(),
@@ -38,5 +37,9 @@ Route::middleware(RedirectToLoginIfNotLogin::class)->group(function () {
             "logs" => Log::count(),
         ]);
     })->name("home");
+
+    Route::controller(DepartmentController::class)->group(function () {
+        Route::get("/departments", "index")->name("departments.index");
+    });
 });
 
