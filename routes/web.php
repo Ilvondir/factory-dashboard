@@ -40,6 +40,7 @@ Route::middleware(RedirectToLoginIfNotLogin::class)->group(function () {
 
     Route::controller(DepartmentController::class)->group(function () {
         Route::get("/departments", "index")->name("departments.index");
+        Route::delete("/departments/{department}", "destroy")->name("departments.destroy");
     });
 });
 
