@@ -20,6 +20,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Material whereAdded($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Material whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Material whereName($value)
+ * @property int $quantity
+ * @method static \Illuminate\Database\Eloquent\Builder|Material whereQuantity($value)
  * @mixin \Eloquent
  */
 class Material extends Model

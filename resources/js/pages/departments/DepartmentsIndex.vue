@@ -1,24 +1,53 @@
 <script setup lang="ts">
 
-import {Department} from "@/models/department";
+import {Department, InputDepartment} from "@/models/department";
 import BasePage from "@/components/pages/BasePage.vue";
 import {ref} from "vue";
 import {router} from "@inertiajs/vue3";
 
 const departmentToDelete = ref({} as Department);
-const departmentToUpdate = ref({} as Department);
+const departmentToUpdate = ref(new InputDepartment() as InputDepartment);
+const idToUpdate = ref(0 as number);
+const departmentToCreate = ref(new InputDepartment() as InputDepartment)
+const localErrors = ref(new InputDepartment() as InputDepartment);
 
-defineProps<{
+const props = defineProps<{
     departments: Department[],
     positionsCounts: number[],
     canUpdateDepartments: boolean[],
     canDeleteDepartments: boolean[],
-    canCreateDepartments: boolean
+    canCreateDepartments: boolean,
+    errors: InputDepartment
 }>();
 
 const handleDelete = () => {
     router.delete(`departments/${departmentToDelete.value.id}`, {});
 }
+
+const handleUpdate = () => {
+    router.put(`departments/${idToUpdate.value}`, departmentToUpdate.value, {
+        onSuccess: () => {
+            const closeButton = document.getElementById("closeUpdateModal");
+            if (closeButton) {
+                closeButton.click();
+            }
+        },
+        onError: () => localErrors.value = props.errors,
+    });
+}
+
+const handleCreate = () => {
+    router.post(`departments`, departmentToCreate.value, {
+        onSuccess: () => {
+            const closeButton = document.getElementById("closeCreateModal");
+            if (closeButton) {
+                closeButton.click();
+            }
+        },
+        onError: () => localErrors.value = props.errors,
+    })
+}
+
 </script>
 
 <template>
@@ -36,9 +65,18 @@ const handleDelete = () => {
             high standards of quality.
         </p>
 
-        <p>
+        <p v-if="canUpdateDepartments.includes(true)">
             <strong>A department can only be deleted if no position is assigned to it.</strong>
         </p>
+
+        <div v-if="canCreateDepartments" class="d-flex mt-3 mb-3 justify-content-end">
+            <button class="btn btn-primary" data-bs-toggle="modal"
+                    data-bs-target="#createModal"
+                    @click="localErrors = new InputDepartment()">
+                <i class="bi bi-plus-lg"></i> Create department
+            </button>
+        </div>
+
 
         <table class="table table-hover table-striped">
             <thead>
@@ -46,7 +84,7 @@ const handleDelete = () => {
                 <th scope="col">#</th>
                 <th scope="col">Name</th>
                 <th scope="col">Positions</th>
-                <th scope="col">Actions</th>
+                <th scope="col" v-if="canUpdateDepartments.includes(true)">Actions</th>
             </tr>
             </thead>
             <tbody>
@@ -55,11 +93,17 @@ const handleDelete = () => {
                 <td>{{ item.name }}</td>
                 <td>{{ positionsCounts[index] }} positions</td>
                 <td>
-                    <button class="btn btn-primary me-1" v-if="canUpdateDepartments[index]">
+                    <button class="btn btn-primary me-1" v-if="canUpdateDepartments[index]" data-bs-toggle="modal"
+                            data-bs-target="#updateModal" @click="() => {
+                                departmentToUpdate = {...item}
+                                idToUpdate = item.id
+                                localErrors = new InputDepartment()
+                            }">
                         <i class="bi bi-pen"></i>
                     </button>
                     <button v-if="canDeleteDepartments[index]" class="btn btn-danger ms-1" data-bs-toggle="modal"
-                            data-bs-target="#deleteModal" @click="departmentToDelete = item">
+                            data-bs-target="#deleteModal"
+                            @click="departmentToDelete = item">
                         <i class="bi bi-trash"></i>
                     </button>
                 </td>
@@ -74,7 +118,7 @@ const handleDelete = () => {
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Confirm decision</h1>
+                    <h1 class="modal-title fs-5">Confirm decision</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -86,6 +130,81 @@ const handleDelete = () => {
                         department
                     </button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="updateModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Update department</h1>
+                    <button type="button" class="btn-close" id="closeUpdateModal" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <form @submit.prevent="handleUpdate">
+                    <div class="modal-body">
+
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Name:</label>
+                            <input type="text" class="form-control" id="title" v-model="departmentToUpdate.name"
+                                   placeholder="Department name" required>
+                        </div>
+
+                        <div v-if="localErrors.name !== ''" class="alert-danger alert">
+                            <ul class="m-0">
+                                <li v-for="er in localErrors">
+                                    {{ er }}
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">
+                            Update department
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="createModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Create new department</h1>
+                    <button type="button" class="btn-close" id="closeCreateModal" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <form @submit.prevent="handleCreate">
+                    <div class="modal-body">
+
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Name:</label>
+                            <input type="text" class="form-control" id="title" v-model="departmentToCreate.name"
+                                   placeholder="Department name" required>
+                        </div>
+
+                        <div v-if="localErrors.name" class="alert-danger alert">
+                            <ul class="m-0">
+                                <li v-for="er in localErrors">
+                                    {{ er }}
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">
+                            Create department
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

@@ -1,0 +1,15 @@
+.btn-primary {
+    transition: 300ms;
+}
+
+.btn-primary:hover {
+    box-shadow: 0 0 15px #0D6EFDA0;
+}
+
+.btn-danger {
+    transition: 300ms;
+}
+
+.btn-danger:hover {
+    box-shadow: 0 0 15px #DC3545A0;
+}

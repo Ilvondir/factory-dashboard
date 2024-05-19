@@ -36,7 +36,7 @@ defineProps<{
 
         <div class="row d-flex justify-content-center">
 
-            <standard-bs-card title="Departments" link="/departments"
+            <standard-bs-card title="Departments" :link="'/departments'"
                               :body="'The factory is divided into ' + departments + ' departments.'"></standard-bs-card>
 
             <standard-bs-card title="Positions" link="/positions"

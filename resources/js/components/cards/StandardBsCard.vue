@@ -16,7 +16,7 @@ defineProps<{
                 <p class="card-text">
                     {{ body }}
                 </p>
-                <inertia-link href="{{ link }}" class="btn btn-primary">{{ title }}</inertia-link>
+                <inertia-link :href='link' class="btn btn-primary">{{ title }}</inertia-link>
             </div>
         </div>
     </div>
