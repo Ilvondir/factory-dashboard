@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PositionRequest;
 use App\Models\Department;
 use App\Models\Position;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -16,7 +17,7 @@ class PositionController extends Controller
      */
     public function index()
     {
-        $positions = Position::with(["department", "workers"])->paginate(10);
+        $positions = Position::with(["department", "workers"])->paginate(100);
 
         $canUpdatePositions = [];
         $canDeletePositions = [];
@@ -30,24 +31,26 @@ class PositionController extends Controller
             "positions" => $positions,
             "canCreatePositions" => Auth::user()->can('create', Position::class),
             "canUpdatePositions" => $canUpdatePositions,
-            "canDeletePositions" => $canDeletePositions
+            "canDeletePositions" => $canDeletePositions,
+            "departments" => Department::get()
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(PositionRequest $request)
     {
-        //
+        \Gate::authorize("create", Position::class);
+
+        $data = $request->validated();
+
+        Department::find($data["department"])->positions()->create([
+            "name" => $data["name"],
+            "responsibilities" => $data["responsibilities"]
+        ]);
+
+        return redirect()->route("positions.index");
     }
 
     /**

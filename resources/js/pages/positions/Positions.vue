@@ -1,28 +1,41 @@
 <script setup lang="ts">
 
 import BasePage from "@/components/pages/BasePage.vue";
-import {type Position} from "@/models/position";
+import {InputPosition, type Position} from "@/models/position";
 import {onMounted, ref} from 'vue';
 import {router} from "@inertiajs/vue3";
+import {Department} from "@/models/department";
 
 const itemToDelete = ref({} as Position);
+const positionToCreate = ref(new InputPosition() as InputPosition);
+const localErrors = ref(new InputPosition() as InputPosition);
 
 const props = defineProps<{
     positions: {
         data: Position[]
     },
     canCreatePositions: boolean,
-    canUpdatePositions: boolean[]
-    canDeletePositions: boolean[]
+    canUpdatePositions: boolean[],
+    canDeletePositions: boolean[],
+    departments: Department[],
+    errors: InputPosition
 }>();
 
 const handleDelete = () => {
     router.delete(`positions/${itemToDelete.value.id}`);
 }
 
-onMounted(() => {
-    console.log(props);
-});
+const handleCreate = () => {
+    router.post("positions", positionToCreate.value, {
+        onSuccess: () => {
+            const closeButton = document.getElementById("closeCreateModal");
+            if (closeButton) {
+                closeButton.click();
+            }
+        },
+        onError: () => localErrors.value = props.errors
+    })
+}
 </script>
 
 <template>
@@ -49,7 +62,9 @@ onMounted(() => {
         </p>
 
         <div v-if="canCreatePositions" class="d-flex justify-content-end mb-3 mt-3">
-            <button class="btn btn-primary">
+            <button class="btn btn-primary"
+                    data-bs-toggle="modal"
+                    data-bs-target="#createModal">
                 <i class="bi bi-plus-lg"></i> Add new position
             </button>
         </div>
@@ -62,7 +77,9 @@ onMounted(() => {
                 <th>Name</th>
                 <th>Workers</th>
                 <th>Department</th>
-                <th v-if="canUpdatePositions.includes(true)">Actions</th>
+                <th v-if="canUpdatePositions.includes(true)" style="min-width: 130px">
+                    Actions
+                </th>
             </tr>
             </thead>
             <tbody>
@@ -82,6 +99,7 @@ onMounted(() => {
                         <i class="bi bi-trash"></i>
                     </button>
                 </td>
+
             </tr>
             </tbody>
         </table>
@@ -101,9 +119,68 @@ onMounted(() => {
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="button" @click="handleDelete" class="btn btn-danger" data-bs-dismiss="modal">Delete
-                        department
+                        position
                     </button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="createModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Create new department</h1>
+                    <button type="button" class="btn-close" id="closeCreateModal" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <form @submit.prevent="handleCreate">
+                    <div class="modal-body">
+
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Name:</label>
+                            <input type="text" class="form-control" id="title" v-model="positionToCreate.name"
+                                   placeholder="Position name" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="responsibilities" class="form-label">Responsibilities:</label>
+                            <textarea v-model="positionToCreate.responsibilities" class="form-control"
+                                      id="responsibilities"
+                                      placeholder="Position responsibilities" rows="6" required></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="department" class="form-label">Department:</label>
+                            <select
+                                class="form-select" id="department" required
+                                @change="(event) => positionToCreate.department = event.target.selectedOptions[0].value"
+                            >
+                                <option value="" disabled selected>Select department</option>
+                                <option v-for="d in departments" :value="d.id">
+                                    {{ d.name }}
+                                </option>
+                            </select>
+                        </div>
+
+                        <div v-if="localErrors.name || localErrors.responsibilities || localErrors.department"
+                             class="alert-danger alert">
+                            <ul class="m-0">
+                                <li v-for="er in localErrors">
+                                    {{ er }}
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">
+                            Create position
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
