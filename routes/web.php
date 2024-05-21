@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\PositionController;
 use App\Http\Middleware\RedirectToHomeIfLogin;
 use App\Http\Middleware\RedirectToLoginIfNotLogin;
 use App\Models\Department;
@@ -43,6 +44,11 @@ Route::middleware(RedirectToLoginIfNotLogin::class)->group(function () {
         Route::post("/departments", "store")->name("departments.store");
         Route::put("/departments/{department}", "update")->name("departments.update");
         Route::delete("/departments/{department}", "destroy")->name("departments.destroy");
+    });
+
+    Route::controller(PositionController::class)->group(function () {
+        Route::get("/positions", "index")->name("positions.index");
+        Route::delete("/positions/{position}", "destroy")->name("positions.destroy");
     });
 });
 

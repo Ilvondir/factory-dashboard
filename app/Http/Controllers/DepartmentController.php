@@ -28,7 +28,7 @@ class DepartmentController extends Controller
             $canDeleteDepartments[] = Auth::user()->can('delete', $d);
         }
 
-        return Inertia::render("departments/DepartmentsIndex", [
+        return Inertia::render("departments/Departments", [
             "departments" => $departments,
             "positionsCounts" => $positionsCounts,
             "canUpdateDepartments" => $canUpdateDepartments,

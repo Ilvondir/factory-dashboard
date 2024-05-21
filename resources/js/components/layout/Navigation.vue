@@ -40,7 +40,7 @@ const logout = () => {
                             </inertia-link>
                         </li>
                         <li class="nav-item">
-                            <inertia-link href="#" class="nav-link text-white" aria-current="page">
+                            <inertia-link href="/positions" class="nav-link text-white" aria-current="page">
                                 <i class="bi-journal-bookmark"></i> Positions
                             </inertia-link>
                         </li>
