@@ -6,7 +6,6 @@ use App\Http\Requests\PositionRequest;
 use App\Models\Department;
 use App\Models\Position;
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
@@ -17,7 +16,7 @@ class PositionController extends Controller
      */
     public function index()
     {
-        $positions = Position::with(["department", "workers"])->paginate(100);
+        $positions = Position::with(["department", "workers"])->orderBy("id")->paginate(10);
 
         $canUpdatePositions = [];
         $canDeletePositions = [];
@@ -45,7 +44,7 @@ class PositionController extends Controller
 
         $data = $request->validated();
 
-        Department::find($data["department"])->positions()->create([
+        Department::find($data["department_id"])->positions()->create([
             "name" => $data["name"],
             "responsibilities" => $data["responsibilities"]
         ]);
@@ -56,9 +55,11 @@ class PositionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Position $position)
+    public function update(PositionRequest $request, Position $position)
     {
-        //
+        \Gate::authorize("update", $position);
+        Position::findOrFail($position->id)->update($request->validated());
+        return redirect()->route("positions.index");
     }
 
     /**

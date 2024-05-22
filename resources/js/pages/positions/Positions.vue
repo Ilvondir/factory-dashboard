@@ -9,6 +9,8 @@ import {Department} from "@/models/department";
 const itemToDelete = ref({} as Position);
 const positionToCreate = ref(new InputPosition() as InputPosition);
 const localErrors = ref(new InputPosition() as InputPosition);
+const idToUpdate = ref(0 as number);
+const positionToUpdate = ref(new InputPosition() as InputPosition);
 
 const props = defineProps<{
     positions: {
@@ -36,6 +38,22 @@ const handleCreate = () => {
         onError: () => localErrors.value = props.errors
     })
 }
+
+const handleUpdate = () => {
+    router.put(`positions/${idToUpdate.value}`, positionToUpdate.value, {
+        onSuccess: () => {
+            const closeButton = document.getElementById("closeUpdateModal");
+            if (closeButton) {
+                closeButton.click();
+            }
+        },
+        onError: () => localErrors.value = props.errors
+    })
+}
+
+onMounted(() => {
+    console.log(props);
+})
 </script>
 
 <template>
@@ -84,12 +102,19 @@ const handleCreate = () => {
             </thead>
             <tbody>
             <tr v-for="(item, index) in positions.data" class="details-row">
-                <th scope="row">{{ index + 1 }}</th>
+                <th scope="row">{{ index + 1 + (positions.current_page - 1) * positions.per_page }}</th>
                 <td>{{ item.name }}</td>
                 <td>{{ item.workers.length }} workers</td>
                 <td>{{ item.department.name }}</td>
                 <td v-if="canUpdatePositions.includes(true)">
-                    <button class="btn btn-primary me-1" v-if="canUpdatePositions[index]">
+                    <button class="btn btn-primary me-1" v-if="canUpdatePositions[index]"
+                            data-bs-toggle="modal" data-bs-target="#updateModal"
+                            @click="() => {
+                                idToUpdate = item.id;
+                                positionToUpdate.responsibilities = item.responsibilities;
+                                positionToUpdate.name = item.name;
+                                positionToUpdate.department_id = item.department.id;
+                            }">
                         <i class="bi bi-pen"></i>
                     </button>
 
@@ -103,6 +128,59 @@ const handleCreate = () => {
             </tr>
             </tbody>
         </table>
+
+        <nav class="d-flex justify-content-center">
+            <ul class="pagination">
+                <li class="page-item">
+                    <inertia-link class="page-link" :href="positions.first_page_url"
+                                  preserve-scroll>
+                        <span><i class="bi bi-chevron-double-left"></i></span>
+                    </inertia-link>
+                </li>
+
+                <li v-if="positions.current_page - 2 > 0" class="page-item">
+                    <inertia-link :href="positions.links[positions.current_page - 2].url" class="page-link"
+                                  preserve-scroll>
+                        <span>{{ positions.current_page - 2 }}</span>
+                    </inertia-link>
+                </li>
+
+                <li v-if="positions.current_page - 1 > 0" class="page-item">
+                    <inertia-link :href="positions.links[positions.current_page - 1].url" class="page-link"
+                                  preserve-scroll>
+                        <span>{{ positions.current_page - 1 }}</span>
+                    </inertia-link>
+                </li>
+
+                <li class="page-item active">
+                    <span class="page-link">
+                        <span>{{ positions.current_page }}</span>
+                    </span>
+                </li>
+
+                <li v-if="positions.current_page + 1 <= positions.last_page" class="page-item">
+                    <inertia-link :href="positions.links[positions.current_page + 1].url" class="page-link"
+                                  preserve-scroll>
+                        <span>{{ positions.current_page + 1 }}</span>
+                    </inertia-link>
+                </li>
+
+                <li v-if="positions.current_page + 2 <= positions.last_page" class="page-item">
+                    <inertia-link :href="positions.links[positions.current_page + 2].url" class="page-link"
+                                  preserve-scroll>
+                        <span>{{ positions.current_page + 2 }}</span>
+                    </inertia-link>
+                </li>
+
+                <li class="page-item">
+                    <inertia-link class="page-link" :href="positions.last_page_url"
+                                  preserve-scroll>
+                        <span><i class="bi bi-chevron-double-right"></i></span>
+                    </inertia-link>
+                </li>
+            </ul>
+        </nav>
+
     </BasePage>
 
 
@@ -131,7 +209,7 @@ const handleCreate = () => {
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5">Create new department</h1>
+                    <h1 class="modal-title fs-5">Create new position</h1>
                     <button type="button" class="btn-close" id="closeCreateModal" data-bs-dismiss="modal"
                             aria-label="Close"></button>
                 </div>
@@ -155,7 +233,7 @@ const handleCreate = () => {
                             <label for="department" class="form-label">Department:</label>
                             <select
                                 class="form-select" id="department" required
-                                @change="(event) => positionToCreate.department = event.target.selectedOptions[0].value"
+                                @change="(event) => positionToCreate.department_id = event.target.selectedOptions[0].value"
                             >
                                 <option value="" disabled selected>Select department</option>
                                 <option v-for="d in departments" :value="d.id">
@@ -164,7 +242,7 @@ const handleCreate = () => {
                             </select>
                         </div>
 
-                        <div v-if="localErrors.name || localErrors.responsibilities || localErrors.department"
+                        <div v-if="localErrors.name || localErrors.responsibilities || localErrors.department_id"
                              class="alert-danger alert">
                             <ul class="m-0">
                                 <li v-for="er in localErrors">
@@ -178,6 +256,66 @@ const handleCreate = () => {
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">
                             Create position
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="updateModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Edit position</h1>
+                    <button type="button" class="btn-close" id="closeUpdateModal" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <form @submit.prevent="handleUpdate">
+                    <div class="modal-body">
+
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Name:</label>
+                            <input type="text" class="form-control" id="title" v-model="positionToUpdate.name"
+                                   placeholder="Position name" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="responsibilities" class="form-label">Responsibilities:</label>
+                            <textarea v-model="positionToUpdate.responsibilities" class="form-control"
+                                      id="responsibilities"
+                                      placeholder="Position responsibilities" rows="6" required></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="department" class="form-label">Department:</label>
+                            <select
+                                class="form-select" id="department" required
+                                @change="(event) => positionToUpdate.department_id = event.target.selectedOptions[0].value"
+                            >
+                                <option value="" disabled>Select department</option>
+                                <option v-for="d in departments" :value="d.id"
+                                        :selected="positionToUpdate.department_id === d.id">
+                                    {{ d.name }}
+                                </option>
+                            </select>
+                        </div>
+
+                        <div v-if="localErrors.name || localErrors.responsibilities || localErrors.department_id"
+                             class="alert-danger alert">
+                            <ul class="m-0">
+                                <li v-for="er in localErrors">
+                                    {{ er }}
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">
+                            Update position
                         </button>
                     </div>
                 </form>

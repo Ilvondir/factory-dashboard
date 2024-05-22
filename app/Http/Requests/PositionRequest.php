@@ -24,7 +24,7 @@ class PositionRequest extends FormRequest
         return [
             "name" => ["required", "min:5", "max:50"],
             "responsibilities" => ["required", "min:50"],
-            "department" => ["required", "integer", "min:0"]
+            "department_id" => ["required", "integer", "min:0"]
         ];
     }
 }

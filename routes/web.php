@@ -49,6 +49,7 @@ Route::middleware(RedirectToLoginIfNotLogin::class)->group(function () {
     Route::controller(PositionController::class)->group(function () {
         Route::get("/positions", "index")->name("positions.index");
         Route::delete("/positions/{position}", "destroy")->name("positions.destroy");
+        Route::put("/positions/{position}", "update")->name("positions.update");
         Route::post("/positions", "store")->name("positions.store");
     });
 });

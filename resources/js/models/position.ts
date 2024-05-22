@@ -12,5 +12,5 @@ export interface Position {
 export class InputPosition {
     name: string = ""
     responsibilities: string = ""
-    department: number = 0
+    department_id: number = 0
 }
