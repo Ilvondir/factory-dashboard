@@ -5,6 +5,7 @@ import {InputPosition, type Position} from "@/models/position";
 import {onMounted, ref} from 'vue';
 import {router} from "@inertiajs/vue3";
 import {Department} from "@/models/department";
+import {Pagination} from "@/models/pagination";
 
 const itemToDelete = ref({} as Position);
 const positionToCreate = ref(new InputPosition() as InputPosition);
@@ -13,9 +14,7 @@ const idToUpdate = ref(0 as number);
 const positionToUpdate = ref(new InputPosition() as InputPosition);
 
 const props = defineProps<{
-    positions: {
-        data: Position[]
-    },
+    positions: Pagination<Position>,
     canCreatePositions: boolean,
     canUpdatePositions: boolean[],
     canDeletePositions: boolean[],
@@ -101,31 +100,44 @@ onMounted(() => {
             </tr>
             </thead>
             <tbody>
-            <tr v-for="(item, index) in positions.data" class="details-row">
-                <th scope="row">{{ index + 1 + (positions.current_page - 1) * positions.per_page }}</th>
-                <td>{{ item.name }}</td>
-                <td>{{ item.workers.length }} workers</td>
-                <td>{{ item.department.name }}</td>
-                <td v-if="canUpdatePositions.includes(true)">
-                    <button class="btn btn-primary me-1" v-if="canUpdatePositions[index]"
-                            data-bs-toggle="modal" data-bs-target="#updateModal"
-                            @click="() => {
+
+            <template v-for="(item, index) in positions.data">
+
+                <tr class="details-row">
+                    <th scope="row">{{ index + 1 + (positions.current_page - 1) * positions.per_page }}</th>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.workers.length }} workers</td>
+                    <td>{{ item.department.name }}</td>
+                    <td v-if="canUpdatePositions.includes(true)">
+                        <button class="btn btn-primary me-1" v-if="canUpdatePositions[index]"
+                                data-bs-toggle="modal" data-bs-target="#updateModal"
+                                @click="() => {
                                 idToUpdate = item.id;
                                 positionToUpdate.responsibilities = item.responsibilities;
                                 positionToUpdate.name = item.name;
                                 positionToUpdate.department_id = item.department.id;
                             }">
-                        <i class="bi bi-pen"></i>
-                    </button>
+                            <i class="bi bi-pen"></i>
+                        </button>
 
-                    <button class="btn btn-danger ms-1" v-if="canDeletePositions[index]"
-                            data-bs-toggle="modal" data-bs-target="#deleteModal"
-                            @click="itemToDelete = item">
-                        <i class="bi bi-trash"></i>
-                    </button>
-                </td>
+                        <button class="btn btn-danger ms-1" v-if="canDeletePositions[index]"
+                                data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                @click="itemToDelete = item">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
 
-            </tr>
+                </tr>
+
+                <tr>
+                    <td :colspan="canUpdatePositions.includes(true) ? 5 : 4">
+                        {{ item.responsibilities }}
+                    </td>
+                </tr>
+
+            </template>
+
+
             </tbody>
         </table>
 
