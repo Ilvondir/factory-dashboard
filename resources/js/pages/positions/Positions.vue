@@ -6,6 +6,7 @@ import {onMounted, ref} from 'vue';
 import {router} from "@inertiajs/vue3";
 import {Department} from "@/models/department";
 import {Pagination} from "@/models/pagination";
+import Paginator from "@/components/layout/Paginator.vue";
 
 const itemToDelete = ref({} as Position);
 const positionToCreate = ref(new InputPosition() as InputPosition);
@@ -141,57 +142,7 @@ onMounted(() => {
             </tbody>
         </table>
 
-        <nav class="d-flex justify-content-center">
-            <ul class="pagination">
-                <li class="page-item">
-                    <inertia-link class="page-link" :href="positions.first_page_url"
-                                  preserve-scroll>
-                        <span><i class="bi bi-chevron-double-left"></i></span>
-                    </inertia-link>
-                </li>
-
-                <li v-if="positions.current_page - 2 > 0" class="page-item">
-                    <inertia-link :href="positions.links[positions.current_page - 2].url" class="page-link"
-                                  preserve-scroll>
-                        <span>{{ positions.current_page - 2 }}</span>
-                    </inertia-link>
-                </li>
-
-                <li v-if="positions.current_page - 1 > 0" class="page-item">
-                    <inertia-link :href="positions.links[positions.current_page - 1].url" class="page-link"
-                                  preserve-scroll>
-                        <span>{{ positions.current_page - 1 }}</span>
-                    </inertia-link>
-                </li>
-
-                <li class="page-item active">
-                    <span class="page-link">
-                        <span>{{ positions.current_page }}</span>
-                    </span>
-                </li>
-
-                <li v-if="positions.current_page + 1 <= positions.last_page" class="page-item">
-                    <inertia-link :href="positions.links[positions.current_page + 1].url" class="page-link"
-                                  preserve-scroll>
-                        <span>{{ positions.current_page + 1 }}</span>
-                    </inertia-link>
-                </li>
-
-                <li v-if="positions.current_page + 2 <= positions.last_page" class="page-item">
-                    <inertia-link :href="positions.links[positions.current_page + 2].url" class="page-link"
-                                  preserve-scroll>
-                        <span>{{ positions.current_page + 2 }}</span>
-                    </inertia-link>
-                </li>
-
-                <li class="page-item">
-                    <inertia-link class="page-link" :href="positions.last_page_url"
-                                  preserve-scroll>
-                        <span><i class="bi bi-chevron-double-right"></i></span>
-                    </inertia-link>
-                </li>
-            </ul>
-        </nav>
+        <Paginator :items="positions"/>
 
     </BasePage>
 
