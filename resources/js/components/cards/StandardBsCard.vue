@@ -21,3 +21,15 @@ defineProps<{
         </div>
     </div>
 </template>
+
+<style scoped>
+.card {
+    transition: 1s;
+    box-shadow: 0 0 5px #00000040;
+}
+
+.card:hover {
+    box-shadow: 0 0 13px #00000080;
+    scale: 1.03;
+}
+</style>

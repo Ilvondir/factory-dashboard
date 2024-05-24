@@ -13,6 +13,7 @@ const positionToCreate = ref(new InputPosition() as InputPosition);
 const localErrors = ref(new InputPosition() as InputPosition);
 const idToUpdate = ref(0 as number);
 const positionToUpdate = ref(new InputPosition() as InputPosition);
+const details = ref(-1 as number);
 
 const props = defineProps<{
     positions: Pagination<Position>,
@@ -22,6 +23,29 @@ const props = defineProps<{
     departments: Department[],
     errors: InputPosition
 }>();
+
+const hide = {
+    maxHeight: "0",
+    minHeight: "0",
+    lineHeight: "0",
+    height: "0",
+    transition: ".5s",
+}
+
+const cellHide = {
+    padding: 0,
+    overflow: "hidden",
+    transition: ".5s",
+}
+
+const cell = {
+    transition: "0.5s",
+    overflow: "hidden",
+}
+
+const show = {
+    transition: ".5s"
+}
 
 const handleDelete = () => {
     router.delete(`positions/${itemToDelete.value.id}`);
@@ -79,6 +103,8 @@ onMounted(() => {
             <strong>A position can only be deleted if no worker is assigned to it.</strong>
         </p>
 
+        <strong>You can click on the position you are interested in to read more details.</strong>
+
         <div v-if="canCreatePositions" class="d-flex justify-content-end mb-3 mt-3">
             <button class="btn btn-primary"
                     data-bs-toggle="modal"
@@ -88,7 +114,7 @@ onMounted(() => {
         </div>
 
 
-        <table class="table table-hover table-striped">
+        <table class="table table-hover">
             <thead>
             <tr>
                 <th scope="col">#</th>
@@ -104,7 +130,7 @@ onMounted(() => {
 
             <template v-for="(item, index) in positions.data">
 
-                <tr class="details-row">
+                <tr @click="details = index">
                     <th scope="row">{{ index + 1 + (positions.current_page - 1) * positions.per_page }}</th>
                     <td>{{ item.name }}</td>
                     <td>{{ item.workers.length }} workers</td>
@@ -113,10 +139,10 @@ onMounted(() => {
                         <button class="btn btn-primary me-1" v-if="canUpdatePositions[index]"
                                 data-bs-toggle="modal" data-bs-target="#updateModal"
                                 @click="() => {
-                                idToUpdate = item.id;
-                                positionToUpdate.responsibilities = item.responsibilities;
-                                positionToUpdate.name = item.name;
-                                positionToUpdate.department_id = item.department.id;
+                                    idToUpdate = item.id;
+                                    positionToUpdate.responsibilities = item.responsibilities;
+                                    positionToUpdate.name = item.name;
+                                    positionToUpdate.department_id = item.department.id;
                             }">
                             <i class="bi bi-pen"></i>
                         </button>
@@ -130,8 +156,9 @@ onMounted(() => {
 
                 </tr>
 
-                <tr>
-                    <td :colspan="canUpdatePositions.includes(true) ? 5 : 4">
+                <tr :style="details === index ? show : hide">
+                    <td :colspan="canUpdatePositions.includes(true) ? 5 : 4"
+                        :style="details !== index ? cellHide : cell">
                         {{ item.responsibilities }}
                     </td>
                 </tr>

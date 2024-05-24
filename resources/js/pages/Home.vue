@@ -26,7 +26,7 @@ defineProps<{
     </inertia-head>
 
     <BasePage title="Home">
-        <div class="p-5 text-center bg-body-tertiary rounded-3">
+        <div class="p-5 text-center bg-body-tertiary rounded-3 jumbotron">
             <h1 class="text-body-emphasis">Welcome, {{ user.first_name + " " + user.last_name }}!</h1>
             <p class="col-lg-9 mx-auto fs-5 text-muted">
                 This is a factory management panel. Within this system, you can manage company resources, view
@@ -59,6 +59,26 @@ defineProps<{
 
         </div>
 
-
     </BasePage>
 </template>
+
+<style scoped>
+.jumbotron {
+    animation-name: animate;
+    animation-duration: 4s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+@keyframes animate {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.015);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+</style>

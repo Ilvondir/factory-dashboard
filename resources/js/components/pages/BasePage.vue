@@ -30,3 +30,13 @@ const time = () => date.value = new Date().toLocaleTimeString() + "<br>" + new D
         </main>
     </div>
 </template>
+
+<style scoped>
+h2 {
+    transition: 1s;
+}
+
+h2:hover {
+    letter-spacing: 0.5px;
+}
+</style>
