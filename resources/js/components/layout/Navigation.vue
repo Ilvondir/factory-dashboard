@@ -22,7 +22,7 @@ const logout = () => {
         <ul class="nav nav-pills flex-column mb-auto">
 
             <li class="mb-1 nav-item">
-                <inertia-link href="/home" class="btn btn-toggle align-items-center rounded text-white fs-5">
+                <inertia-link href="/home" class="btn btn-toggle align-items-center rounded text-white fs-5 move">
                     <i class="bi-house"></i> Home
                 </inertia-link>
             </li>
@@ -45,7 +45,7 @@ const logout = () => {
                             </inertia-link>
                         </li>
                         <li class="nav-item">
-                            <inertia-link href="#" class="nav-link text-white" aria-current="page">
+                            <inertia-link href="/workers" class="nav-link text-white" aria-current="page">
                                 <i class="bi-people"></i> Workers
                             </inertia-link>
                         </li>
@@ -108,3 +108,13 @@ const logout = () => {
         </div>
     </div>
 </template>
+
+<style scoped>
+.nav-link, .move {
+    transition: 0.5s;
+}
+
+.nav-link:hover, .move:hover {
+    margin-left: 10px;
+}
+</style>

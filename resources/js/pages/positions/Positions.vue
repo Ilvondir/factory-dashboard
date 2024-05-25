@@ -39,12 +39,12 @@ const cellHide = {
 }
 
 const cell = {
-    transition: "0.5s",
+    transition: "0.3s",
     overflow: "hidden",
 }
 
 const show = {
-    transition: ".5s"
+    transition: ".3s"
 }
 
 const handleDelete = () => {
