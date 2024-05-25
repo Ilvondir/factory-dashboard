@@ -14,10 +14,11 @@ class WorkerController extends Controller
      */
     public function index()
     {
-        $workers = Worker::with("position")->get();
+        $workers = Worker::with("position.department")->get();
 
         return Inertia::render("workers/Workers", [
-            "workers" => $workers
+            "workers" => $workers,
+            "canCreateWorker" => \Gate::authorize("create", Worker::class),
         ]);
     }
 
