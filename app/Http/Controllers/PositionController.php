@@ -49,7 +49,7 @@ class PositionController extends Controller
             "responsibilities" => $data["responsibilities"]
         ]);
 
-        return redirect()->route("positions.index");
+        return back();
     }
 
     /**
@@ -59,7 +59,7 @@ class PositionController extends Controller
     {
         \Gate::authorize("update", $position);
         Position::findOrFail($position->id)->update($request->validated());
-        return redirect()->route("positions.index");
+        return back();
     }
 
     /**
@@ -70,6 +70,6 @@ class PositionController extends Controller
     {
         \Gate::authorize('delete', $position);
         Position::destroy($position->id);
-        return redirect()->route("positions.index");
+        return back();
     }
 }

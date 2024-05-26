@@ -35,33 +35,9 @@ class WorkerController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(StoreWorkerRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Worker $worker)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Worker $worker)
     {
         //
     }
@@ -79,6 +55,10 @@ class WorkerController extends Controller
      */
     public function destroy(Worker $worker)
     {
-        //
+        Gate::authorize("delete", $worker);
+
+        Worker::destroy($worker->id);
+
+        return redirect()->route("workers.index");
     }
 }

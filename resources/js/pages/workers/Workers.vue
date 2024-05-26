@@ -2,6 +2,7 @@
 import BasePage from "@/components/pages/BasePage.vue";
 import {onMounted, ref} from "vue";
 import {type Worker} from "@/models/worker";
+import {router} from "@inertiajs/vue3";
 
 const currentWorker = ref({} as Worker);
 const isWorkerSelected = ref(false as boolean);
@@ -14,6 +15,18 @@ const props = defineProps<{
     canEditWorkers: boolean[],
     canDeleteWorkers: boolean[],
 }>();
+
+const handleDelete = () => {
+    router.delete(`/workers/${currentWorker.value.id}`, {
+        preserveScroll: true,
+        onSuccess: () => {
+            const offcanvasCloseButton = document.getElementById("closeOffcanvas");
+            if (offcanvasCloseButton) {
+                offcanvasCloseButton.click();
+            }
+        }
+    });
+}
 
 onMounted(() => {
     console.log(props);
@@ -81,7 +94,8 @@ onMounted(() => {
         <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="offcanvasRightLabel">{{ currentWorker.first_name }}
                 {{ currentWorker.last_name }}</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" id="closeOffcanvas"
+                    aria-label="Close"></button>
         </div>
         <div class="offcanvas-body">
             <p class="opacity-50" style="margin-top: -20px">#{{ currentWorker.id }}</p>
@@ -112,7 +126,8 @@ onMounted(() => {
                 </button>
 
                 <button class="btn btn-danger ms-1" v-if="canDeleteWorkers[indexOfCurrentWorker]"
-                        data-bs-toggle="modal" data-bs-target="#deleteModal">
+                        data-bs-toggle="modal" data-bs-target="#deleteModal"
+                        @click="handleDelete">
                     <i class="bi bi-trash"></i> Delete
                 </button>
             </div>

@@ -48,11 +48,12 @@ const show = {
 }
 
 const handleDelete = () => {
-    router.delete(`positions/${itemToDelete.value.id}`);
+    router.delete(`positions/${itemToDelete.value.id}`, {preserveScroll: true});
 }
 
 const handleCreate = () => {
     router.post("positions", positionToCreate.value, {
+        preserveScroll: true,
         onSuccess: () => {
             const closeButton = document.getElementById("closeCreateModal");
             if (closeButton) {
@@ -65,6 +66,7 @@ const handleCreate = () => {
 
 const handleUpdate = () => {
     router.put(`positions/${idToUpdate.value}`, positionToUpdate.value, {
+        preserveScroll: true,
         onSuccess: () => {
             const closeButton = document.getElementById("closeUpdateModal");
             if (closeButton) {

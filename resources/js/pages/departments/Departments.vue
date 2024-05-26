@@ -21,11 +21,12 @@ const props = defineProps<{
 }>();
 
 const handleDelete = () => {
-    router.delete(`departments/${departmentToDelete.value.id}`, {});
+    router.delete(`departments/${departmentToDelete.value.id}`, {preserveScroll: true});
 }
 
 const handleUpdate = () => {
     router.put(`departments/${idToUpdate.value}`, departmentToUpdate.value, {
+        preserveScroll: true,
         onSuccess: () => {
             const closeButton = document.getElementById("closeUpdateModal");
             if (closeButton) {
@@ -38,6 +39,7 @@ const handleUpdate = () => {
 
 const handleCreate = () => {
     router.post(`departments`, departmentToCreate.value, {
+        preserveScroll: true,
         onSuccess: () => {
             const closeButton = document.getElementById("closeCreateModal");
             if (closeButton) {
