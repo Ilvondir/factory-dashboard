@@ -1,15 +1,15 @@
-.btn-primary {
+.btn-primary, .btn-danger, .btn-success {
     transition: 300ms;
 }
 
 .btn-primary:hover {
-    box-shadow: 0 0 15px #0D6EFDA0;
-}
-
-.btn-danger {
-    transition: 300ms;
+    box-shadow: 0 0 15px #0D6EFD90;
 }
 
 .btn-danger:hover {
-    box-shadow: 0 0 15px #DC3545A0;
+    box-shadow: 0 0 15px #DC354590;
+}
+
+.btn-success:hover {
+    box-shadow: 0 0 15px #19875490;
 }

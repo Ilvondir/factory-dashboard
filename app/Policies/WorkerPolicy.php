@@ -13,7 +13,7 @@ class WorkerPolicy
      */
     public function create(User $user): bool
     {
-        return $user->role_id === 1;
+        return $user->role_id == 1;
     }
 
     /**
@@ -21,7 +21,7 @@ class WorkerPolicy
      */
     public function update(User $user, Worker $worker): bool
     {
-        return $user->role_id === 1;
+        return $user->role_id == 1;
     }
 
     /**
@@ -29,6 +29,6 @@ class WorkerPolicy
      */
     public function delete(User $user, Worker $worker): bool
     {
-        return $user->role_id === 1;
+        return $user->role_id == 1;
     }
 }

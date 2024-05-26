@@ -18,6 +18,7 @@ class DepartmentController extends Controller
     public function index()
     {
         $departments = Department::orderBy("id")->with('positions')->get();
+
         $positionsCounts = [];
         $canUpdateDepartments = [];
         $canDeleteDepartments = [];

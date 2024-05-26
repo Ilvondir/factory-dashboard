@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Worker;
 use App\Http\Requests\StoreWorkerRequest;
 use App\Http\Requests\UpdateWorkerRequest;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
 class WorkerController extends Controller
@@ -16,9 +17,20 @@ class WorkerController extends Controller
     {
         $workers = Worker::with("position.department")->get();
 
+        $canEditWorkers = [];
+        $canDeleteWorkers = [];
+
+        foreach ($workers as $w) {
+            $canEditWorkers[] = \Auth::user()->can("update", $w);
+            $canDeleteWorkers[] = \Auth::user()->can("delete", $w);
+        }
+
+
         return Inertia::render("workers/Workers", [
             "workers" => $workers,
-            "canCreateWorker" => \Gate::authorize("create", Worker::class),
+            "canCreateWorkers" => \Auth::user()->can("create", Worker::class),
+            "canEditWorkers" => $canEditWorkers,
+            "canDeleteWorkers" => $canDeleteWorkers
         ]);
     }
 
