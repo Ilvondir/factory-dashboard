@@ -53,9 +53,9 @@ onMounted(() => {
         <strong>You can click on the worker you are interested in to read more details.</strong>
 
         <div class="d-flex justify-content-end mb-3 mt-3">
-            <button class="btn btn-success">
+            <a href="/workers/csv" class="btn btn-success" download>
                 <i class="bi bi-filetype-csv"></i> Download workers data
-            </button>
+            </a>
 
 
             <button class="btn btn-primary ms-2"
@@ -86,8 +86,8 @@ onMounted(() => {
             </tr>
             </tbody>
         </table>
-
     </BasePage>
+
 
     <div class="offcanvas offcanvas-end w-50" tabindex="-1" id="workerOffcanvas"
          aria-labelledby="offcanvasRightLabel">
@@ -126,10 +126,31 @@ onMounted(() => {
                 </button>
 
                 <button class="btn btn-danger ms-1" v-if="canDeleteWorkers[indexOfCurrentWorker]"
-                        data-bs-toggle="modal" data-bs-target="#deleteModal"
-                        @click="handleDelete">
+                        data-bs-toggle="modal" data-bs-target="#deleteModal">
                     <i class="bi bi-trash"></i> Delete
                 </button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true" v-if="isWorkerSelected">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Confirm decision</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete the <strong>{{ currentWorker.first_name }}
+                    {{ currentWorker.last_name }} ({{ currentWorker.position.name }})</strong> worker?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" @click="handleDelete" class="btn btn-danger" data-bs-dismiss="modal">Delete
+                        worker
+                    </button>
+                </div>
             </div>
         </div>
     </div>
