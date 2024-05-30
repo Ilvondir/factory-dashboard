@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Department;
 use App\Models\Worker;
 use App\Http\Requests\StoreWorkerRequest;
 use App\Http\Requests\UpdateWorkerRequest;
@@ -11,7 +12,6 @@ use Inertia\Inertia;
 use League\Csv\CannotInsertRecord;
 use League\Csv\Exception;
 use League\Csv\Writer;
-use SplTempFileObject;
 
 class WorkerController extends Controller
 {
@@ -35,7 +35,8 @@ class WorkerController extends Controller
             "workers" => $workers,
             "canCreateWorkers" => \Auth::user()->can("create", Worker::class),
             "canEditWorkers" => $canEditWorkers,
-            "canDeleteWorkers" => $canDeleteWorkers
+            "canDeleteWorkers" => $canDeleteWorkers,
+            "departments" => Department::with("positions")->get()
         ]);
     }
 
@@ -44,7 +45,11 @@ class WorkerController extends Controller
      */
     public function store(StoreWorkerRequest $request)
     {
-        //
+        Gate::authorize("create", Worker::class);
+
+        Worker::create($request->validated());
+
+        return back();
     }
 
     /**
@@ -64,7 +69,7 @@ class WorkerController extends Controller
 
         Worker::destroy($worker->id);
 
-        return redirect()->route("workers.index");
+        return back();
     }
 
     /**

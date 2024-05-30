@@ -1,14 +1,18 @@
 <script setup lang="ts">
 import BasePage from "@/components/pages/BasePage.vue";
 import {onMounted, ref} from "vue";
-import {type Worker} from "@/models/worker";
+import {InputWorker, type Worker} from "@/models/worker";
 import {router} from "@inertiajs/vue3";
 import Paginator from "@/components/layout/Paginator.vue";
 import {Pagination} from "@/models/pagination";
+import {Department} from "@/models/department";
+import {InputPosition} from "@/models/position";
 
 const currentWorker = ref({} as Worker);
 const isWorkerSelected = ref(false as boolean);
 const indexOfCurrentWorker = ref(0 as number);
+const workerToAdd = ref(new InputWorker() as InputWorker);
+const localErrors = ref({} as InputWorker);
 
 
 const props = defineProps<{
@@ -16,6 +20,8 @@ const props = defineProps<{
   canCreateWorkers: boolean,
   canEditWorkers: boolean[],
   canDeleteWorkers: boolean[],
+  departments: Department[],
+  errors: InputWorker
 }>();
 
 const handleDelete = () => {
@@ -26,6 +32,23 @@ const handleDelete = () => {
       if (offcanvasCloseButton) {
         offcanvasCloseButton.click();
       }
+    }
+  });
+}
+
+const handleCreate = () => {
+  router.post("/workers", workerToAdd.value, {
+    preserveScroll: true,
+    onSuccess: () => {
+      localErrors.value = {} as InputWorker;
+      const closeButton = document.getElementById("closeCreateModal");
+      if (closeButton) {
+        closeButton.click();
+      }
+      workerToAdd.value = new InputWorker();
+    },
+    onError: () => {
+      localErrors.value = props.errors;
     }
   });
 }
@@ -63,7 +86,8 @@ onMounted(() => {
       <button class="btn btn-primary ms-2"
               data-bs-toggle="modal"
               v-if="canCreateWorkers"
-              data-bs-target="#createModal">
+              data-bs-target="#createModal"
+              @click="() => localErrors = {} as InputWorker">
         <i class="bi bi-plus-lg"></i> Add new worker
       </button>
     </div>
@@ -126,7 +150,7 @@ onMounted(() => {
 
       <div class="text-end w-100 mt-3">
         <button class="btn btn-primary me-1" v-if="canEditWorkers[indexOfCurrentWorker]"
-                data-bs-toggle="modal" data-bs-target="#updateModal">
+                data-bs-toggle="modal" data-bs-target="#updateModal" @click="() => localErrors = {} as InputWorker">
           <i class="bi bi-pen"></i> Edit
         </button>
 
@@ -156,6 +180,130 @@ onMounted(() => {
             worker
           </button>
         </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal fade modal-lg" id="createModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5">Add new worker</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" id="closeCreateModal"
+                  aria-label="Close"></button>
+        </div>
+        <form @submit.prevent="handleCreate">
+
+          <div class="modal-body">
+
+            <div class="row">
+              <div class="col-12 col-lg-6">
+                <div class="mb-3">
+                  <label for="first_name" class="form-label">First name:</label>
+                  <input type="text" class="form-control" id="first_name" v-model="workerToAdd.first_name"
+                         placeholder="First name" required>
+                </div>
+              </div>
+
+              <div class="col-12 col-lg-6">
+                <div class="mb-3">
+                  <label for="last_name" class="form-label">Last name:</label>
+                  <input type="text" class="form-control" id="last_name" v-model="workerToAdd.last_name"
+                         placeholder="Last name" required>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="row">
+              <div class="col-12 col-lg-6">
+                <div class="mb-3">
+                  <label for="email" class="form-label">Email:</label>
+                  <input type="email" class="form-control" id="email" v-model="workerToAdd.email"
+                         placeholder="Email" required>
+                </div>
+              </div>
+
+              <div class="col-12 col-lg-6">
+                <div class="mb-3">
+                  <label for="phone_number" class="form-label">Phone number:</label>
+                  <input type="tel" class="form-control" id="phone_number" v-model="workerToAdd.phone_number"
+                         placeholder="Phone number" required>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="row">
+              <div class="col-12">
+                <div class="mb-3">
+                  <label for="address" class="form-label">Address:</label>
+                  <input type="text" class="form-control" id="address" v-model="workerToAdd.address"
+                         placeholder="Address" required>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="row">
+              <div class="col-12 col-lg-6">
+                <div class="mb-3">
+                  <label for="salary" class="form-label">Salary:</label>
+                  <input type="number" class="form-control" id="salary" min="0" step="0.01" v-model="workerToAdd.salary"
+                         placeholder="Salary" required>
+                </div>
+              </div>
+
+              <div class="col-12 col-lg-6">
+                <div class="mb-3">
+                  <label for="position" class="form-label">Position:</label>
+                  <select class="form-select" id="position" required
+                          @change="(event) => {workerToAdd.position_id = event.target ? event.target.selectedOptions[0].value : 0 ; console.log(workerToAdd)}"
+                  >}
+                    <option selected disabled>Select position</option>
+
+                    <template v-for="d in departments">
+                      <optgroup :label="d.name"></optgroup>
+
+                      <option v-for="p in d.positions" :value="p.id">
+                        {{ p.name }}
+                      </option>
+
+                    </template>
+
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12">
+                <div class="mb-3">
+                  <label for="hired" class="form-label">Hired date:</label>
+                  <input type="date" class="form-control" id="hired" v-model="workerToAdd.hired" required>
+                </div>
+              </div>
+            </div>
+
+            <div
+                v-if="Object.keys(localErrors).length > 0"
+                class="alert-danger alert">
+              <ul class="m-0">
+                <li v-for="er in localErrors">
+                  {{ er }}
+                </li>
+              </ul>
+            </div>
+
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Add worker
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>

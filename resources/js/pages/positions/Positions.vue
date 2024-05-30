@@ -4,13 +4,13 @@ import BasePage from "@/components/pages/BasePage.vue";
 import {InputPosition, type Position} from "@/models/position";
 import {onMounted, ref} from 'vue';
 import {router} from "@inertiajs/vue3";
-import {Department} from "@/models/department";
+import {Department, InputDepartment} from "@/models/department";
 import {Pagination} from "@/models/pagination";
 import Paginator from "@/components/layout/Paginator.vue";
 
 const itemToDelete = ref({} as Position);
 const positionToCreate = ref(new InputPosition() as InputPosition);
-const localErrors = ref(new InputPosition() as InputPosition);
+const localErrors = ref({} as InputPosition);
 const idToUpdate = ref(0 as number);
 const positionToUpdate = ref(new InputPosition() as InputPosition);
 const details = ref(-1 as number);
@@ -21,7 +21,7 @@ const props = defineProps<{
   canUpdatePositions: boolean[],
   canDeletePositions: boolean[],
   departments: Department[],
-  errors: InputPosition
+  errors: InputPosition,
 }>();
 
 const hide = {
@@ -59,6 +59,8 @@ const handleCreate = () => {
       if (closeButton) {
         closeButton.click();
       }
+      positionToCreate.value = new InputPosition();
+      localErrors.value = {} as InputPosition;
     },
     onError: () => localErrors.value = props.errors
   })
@@ -68,6 +70,7 @@ const handleUpdate = () => {
   router.put(`positions/${idToUpdate.value}`, positionToUpdate.value, {
     preserveScroll: true,
     onSuccess: () => {
+      localErrors.value = {} as InputPosition;
       const closeButton = document.getElementById("closeUpdateModal");
       if (closeButton) {
         closeButton.click();
@@ -110,7 +113,8 @@ onMounted(() => {
     <div v-if="canCreatePositions" class="d-flex justify-content-end mb-3 mt-3">
       <button class="btn btn-primary"
               data-bs-toggle="modal"
-              data-bs-target="#createModal">
+              data-bs-target="#createModal"
+              @click="localErrors = {} as InputPosition">
         <i class="bi bi-plus-lg"></i> Add new position
       </button>
     </div>
@@ -145,6 +149,7 @@ onMounted(() => {
                                     positionToUpdate.responsibilities = item.responsibilities;
                                     positionToUpdate.name = item.name;
                                     positionToUpdate.department_id = item.department.id;
+                                    localErrors = {} as InputPosition;
                             }">
               <i class="bi bi-pen"></i>
             </button>
@@ -225,7 +230,7 @@ onMounted(() => {
               <label for="department" class="form-label">Department:</label>
               <select
                   class="form-select" id="department" required
-                  @change="(event) => positionToCreate.department_id = event.target.selectedOptions[0].value"
+                  @change="(event) => positionToCreate.department_id = event.target ? event.target.selectedOptions[0].value : 0"
               >
                 <option value="" disabled selected>Select department</option>
                 <option v-for="d in departments" :value="d.id">
@@ -234,7 +239,7 @@ onMounted(() => {
               </select>
             </div>
 
-            <div v-if="localErrors.name || localErrors.responsibilities || localErrors.department_id"
+            <div v-if="Object.keys(localErrors).length > 0"
                  class="alert-danger alert">
               <ul class="m-0">
                 <li v-for="er in localErrors">
@@ -284,7 +289,7 @@ onMounted(() => {
               <label for="department" class="form-label">Department:</label>
               <select
                   class="form-select" id="department" required
-                  @change="(event) => positionToUpdate.department_id = event.target.selectedOptions[0].value"
+                  @change="(event) => positionToUpdate.department_id = event.target ? event.target.selectedOptions[0].value : 0"
               >
                 <option value="" disabled>Select department</option>
                 <option v-for="d in departments" :value="d.id"
@@ -294,7 +299,7 @@ onMounted(() => {
               </select>
             </div>
 
-            <div v-if="localErrors.name || localErrors.responsibilities || localErrors.department_id"
+            <div v-if="Object.keys(localErrors).length > 0"
                  class="alert-danger alert">
               <ul class="m-0">
                 <li v-for="er in localErrors">

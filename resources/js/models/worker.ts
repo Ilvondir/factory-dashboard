@@ -20,4 +20,5 @@ export class InputWorker {
     phone_number: string = ""
     address: string = ""
     position_id: number = 0
+    hired: string = ""
 }

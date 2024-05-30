@@ -1,6 +1,9 @@
+import {Position} from "@/models/position";
+
 export interface Department {
     id: number,
-    name: string
+    name: string,
+    positions: Position[]
 }
 
 
