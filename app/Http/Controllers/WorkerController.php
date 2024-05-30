@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Department;
 use App\Models\Worker;
-use App\Http\Requests\StoreWorkerRequest;
+use App\Http\Requests\WorkerRequest;
 use App\Http\Requests\UpdateWorkerRequest;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Response;
@@ -20,7 +20,7 @@ class WorkerController extends Controller
      */
     public function index()
     {
-        $workers = Worker::with("position.department")->paginate(10);
+        $workers = Worker::with("position.department")->orderBy("id")->paginate(10);
 
         $canEditWorkers = [];
         $canDeleteWorkers = [];
@@ -43,7 +43,7 @@ class WorkerController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreWorkerRequest $request)
+    public function store(WorkerRequest $request)
     {
         Gate::authorize("create", Worker::class);
 
@@ -55,9 +55,13 @@ class WorkerController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateWorkerRequest $request, Worker $worker)
+    public function update(WorkerRequest $request, Worker $worker)
     {
-        //
+        Gate::authorize("update", $worker);
+
+        Worker::findOrFail($worker->id)->update($request->validated());
+
+        return back();
     }
 
     /**

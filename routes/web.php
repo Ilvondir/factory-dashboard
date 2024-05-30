@@ -57,6 +57,7 @@ Route::middleware(RedirectToLoginIfNotLogin::class)->group(function () {
     Route::controller(WorkerController::class)->group(function () {
         Route::get("/workers", "index")->name("workers.index");
         Route::post("/workers", "store")->name("workers.store");
+        Route::put("/workers/{worker}", "update")->name("workers.update");
         Route::get("/workers/csv", "downloadCSV")->name("workers.csv");
         Route::delete("/workers/{worker}", "destroy")->name("workers.destroy");
     });
