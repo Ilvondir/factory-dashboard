@@ -20,7 +20,7 @@ class WorkerController extends Controller
      */
     public function index()
     {
-        $workers = Worker::with("position.department")->get();
+        $workers = Worker::with("position.department")->paginate(10);
 
         $canEditWorkers = [];
         $canDeleteWorkers = [];
