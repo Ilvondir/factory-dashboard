@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- *
+ * 
  *
  * @property int $id
  * @property string $first_name
@@ -28,6 +28,12 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Worker whereLastName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Worker wherePositionId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Worker whereSalary($value)
+ * @property string $email
+ * @property string $phone_number
+ * @property string $address
+ * @method static \Illuminate\Database\Eloquent\Builder|Worker whereAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Worker whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Worker wherePhoneNumber($value)
  * @mixin \Eloquent
  */
 class Worker extends Model

@@ -14,7 +14,7 @@ const logout = () => {
 
 <template>
     <div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark" style="width: 280px; position:fixed; height: 100vh">
-        <inertia-link href="/"
+        <inertia-link href="/home"
                       class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
             <span class="fs-3"><i class="bi-buildings-fill"></i> Factory</span>
         </inertia-link>
@@ -22,24 +22,30 @@ const logout = () => {
         <ul class="nav nav-pills flex-column mb-auto">
 
             <li class="mb-1 nav-item">
+                <inertia-link href="/home" class="btn btn-toggle align-items-center rounded text-white fs-5 move">
+                    <i class="bi-house"></i> Home
+                </inertia-link>
+            </li>
+
+            <li class="mb-1 nav-item">
                 <a class="btn btn-toggle align-items-center rounded text-white fs-5" data-bs-toggle="collapse"
                    data-bs-target="#manufactory-collapse" aria-expanded="true">
                     <i class="bi-gear"></i> Manufactory
                 </a>
-                <div class="collapse" id="manufactory-collapse" style="padding-left: 15px">
+                <div class="collapse show" id="manufactory-collapse" style="padding-left: 15px">
                     <ul class="m-0 p-0" style="list-style-type: none">
                         <li class="nav-item">
-                            <inertia-link href="/" class="nav-link text-white" aria-current="page">
+                            <inertia-link href="/departments" class="nav-link text-white" aria-current="page">
                                 <i class="bi-building"></i> Departments
                             </inertia-link>
                         </li>
                         <li class="nav-item">
-                            <inertia-link href="#" class="nav-link text-white" aria-current="page">
+                            <inertia-link href="/positions" class="nav-link text-white" aria-current="page">
                                 <i class="bi-journal-bookmark"></i> Positions
                             </inertia-link>
                         </li>
                         <li class="nav-item">
-                            <inertia-link href="#" class="nav-link text-white" aria-current="page">
+                            <inertia-link href="/workers" class="nav-link text-white" aria-current="page">
                                 <i class="bi-people"></i> Workers
                             </inertia-link>
                         </li>
@@ -58,17 +64,12 @@ const logout = () => {
             </li>
 
 
-            <li>
-                <hr>
-            </li>
-
-
             <li class="mb-1 nav-item">
                 <a class="btn btn-toggle align-items-center rounded text-white fs-5" data-bs-toggle="collapse"
                    data-bs-target="#system-collapse" aria-expanded="true">
                     <i class="bi-device-ssd"></i> System
                 </a>
-                <div class="collapse" id="system-collapse" style="padding-left: 15px">
+                <div class="collapse show" id="system-collapse" style="padding-left: 15px">
                     <ul class="m-0 p-0" style="list-style-type: none">
                         <li class="nav-item">
                             <inertia-link href="#" class="nav-link text-white" aria-current="page">
@@ -107,3 +108,13 @@ const logout = () => {
         </div>
     </div>
 </template>
+
+<style scoped>
+.nav-link, .move {
+    transition: 0.5s;
+}
+
+.nav-link:hover, .move:hover {
+    margin-left: 10px;
+}
+</style>
