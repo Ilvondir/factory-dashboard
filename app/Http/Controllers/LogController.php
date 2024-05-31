@@ -13,14 +13,8 @@ class LogController extends Controller
      */
     public function index()
     {
-        return Inertia::render("logs/Logs");
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Log $log)
-    {
-        //
+        return Inertia::render("logs/Logs", [
+            "logs" => Log::orderByDesc("id")->with(["action", "user"])->get()
+        ]);
     }
 }

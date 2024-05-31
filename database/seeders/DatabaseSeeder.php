@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
             MaterialSeeder::class,
             ProductSeeder::class,
             ActionSeeder::class,
-            LogSeeder::class
+//            LogSeeder::class
         ]);
 
         $materialCount = Material::count();

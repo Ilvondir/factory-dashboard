@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use App\Casts\ContactCaster;
+use App\Traits\Loggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $first_name
@@ -38,14 +39,28 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Worker extends Model
 {
-    use HasFactory;
+    use HasFactory, Loggable;
 
     public $timestamps = false;
 
     public $guarded = [];
-    
+
     public function position()
     {
         return $this->belongsTo(Position::class);
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::created(function ($model) {
+            $model->log("Worker " . $model->first_name . " " . $model->last_name . " (" . $model->position->name . ") created.", 1);
+        });
+        static::updated(function ($model) {
+            $model->log("Worker " . $model->first_name . " " . $model->last_name . " (" . $model->position->name . ")  updated.", 2);
+        });
+        static::deleted(function ($model) {
+            $model->log("Worker " . $model->first_name . " " . $model->last_name . " (" . $model->position->name . ")  deleted.", 3);
+        });
     }
 }

@@ -1,6 +1,16 @@
 <script setup lang="ts">
-
 import BasePage from "@/components/pages/BasePage.vue";
+import {Log} from "@/models/log";
+import {onMounted} from "vue";
+
+
+const props = defineProps<{
+    logs: Log[]
+}>();
+
+onMounted(() => {
+    console.log(props)
+})
 </script>
 
 <template>
@@ -20,14 +30,29 @@ import BasePage from "@/components/pages/BasePage.vue";
             also pave the way for continuous improvement and innovation in manufacturing practices.
         </p>
 
-        <div class="font-courier">
-            we qwewqe qew ewqe wq
+        <div class="font-courier overflow-x-scroll">
+            <p v-for="item in logs" style="white-space: nowrap;">
+                {{ item.user.first_name }} {{ item.user.last_name }} ({{ item.user.email }})
+                [<span :style="'color: ' + item.action.color">{{ item.action.name.toUpperCase() }}</span>]
+                {{ item.occured }} |
+                {{ item.operation }}
+            </p>
         </div>
+
+
     </BasePage>
 </template>
 
 <style scoped>
 .font-courier {
     font-family: Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace;
+}
+
+.font-courier p {
+    margin: 0;
+}
+
+.font-courier p:hover {
+    font-weight: 700;
 }
 </style>

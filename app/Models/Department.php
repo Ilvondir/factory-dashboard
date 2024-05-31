@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use App\Traits\Loggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $name
@@ -24,7 +25,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Department extends Model
 {
-    use HasFactory;
+    use HasFactory, Loggable;
 
     public $timestamps = false;
     public $guarded = [];
@@ -37,5 +38,19 @@ class Department extends Model
     public function products()
     {
         return $this->hasMany(Product::class);
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::created(function ($model) {
+            $model->log("Department " . $model->name . " created.", 1);
+        });
+        static::updated(function ($model) {
+            $model->log("Department " . $model->name . " updated.", 2);
+        });
+        static::deleted(function ($model) {
+            $model->log("Department " . $model->name . " deleted.", 3);
+        });
     }
 }
