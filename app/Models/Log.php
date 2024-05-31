@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $operation
@@ -33,5 +33,10 @@ class Log extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function action()
+    {
+        return $this->belongsTo(Action::class);
     }
 }

@@ -77,7 +77,7 @@ const logout = () => {
                             </inertia-link>
                         </li>
                         <li>
-                            <inertia-link href="/" class="nav-link text-white">
+                            <inertia-link href="/logs" class="nav-link text-white">
                                 <i class="bi-list-columns-reverse"></i> Logs
                             </inertia-link>
                         </li>
