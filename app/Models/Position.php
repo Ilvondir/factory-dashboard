@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Loggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -27,7 +28,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Position extends Model
 {
-    use HasFactory;
+    use HasFactory, Loggable;
 
     public $timestamps = false;
 
@@ -41,5 +42,19 @@ class Position extends Model
     public function workers()
     {
         return $this->hasMany(Worker::class);
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::created(function ($model) {
+            $model->log("Position " . $model->name . " in department " . $model->department->name . " created.", 1);
+        });
+        static::updated(function ($model) {
+            $model->log("Position " . $model->name . " updated.", 2);
+        });
+        static::deleted(function ($model) {
+            $model->log("Position " . $model->name . " deleted.", 3);
+        });
     }
 }

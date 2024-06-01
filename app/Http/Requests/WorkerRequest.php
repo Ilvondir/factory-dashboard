@@ -26,7 +26,7 @@ class WorkerRequest extends FormRequest
             "last_name" => ["required", "min:2"],
             "salary" => ["required", "decimal:0,2"],
             "email" => ["required", "email", "min:5"],
-            "phone_number" => ["required", "min:8", "max:15"],
+            "phone_number" => ["required", "min:8", "max:20"],
             "address" => ["required", "min:8"],
             "hired" => ["required", "date", "before:tomorrow"],
             "position_id" => ["required", "integer", "min:1"]

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Action;
 use App\Models\Material;
 use App\Models\Product;
 
@@ -22,7 +23,9 @@ class DatabaseSeeder extends Seeder
             PositionSeeder::class,
             WorkerSeeder::class,
             MaterialSeeder::class,
-            ProductSeeder::class
+            ProductSeeder::class,
+            ActionSeeder::class,
+//            LogSeeder::class
         ]);
 
         $materialCount = Material::count();

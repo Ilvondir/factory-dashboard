@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\LogController;
 use App\Http\Controllers\PositionController;
 use App\Http\Controllers\WorkerController;
 use App\Http\Middleware\RedirectToHomeIfLogin;
@@ -58,8 +59,13 @@ Route::middleware(RedirectToLoginIfNotLogin::class)->group(function () {
         Route::get("/workers", "index")->name("workers.index");
         Route::post("/workers", "store")->name("workers.store");
         Route::put("/workers/{worker}", "update")->name("workers.update");
-        Route::get("/workers/csv", "downloadCSV")->name("workers.csv");
+        Route::get("/workers/csv", "downloadCSV")->name("workers.download");
         Route::delete("/workers/{worker}", "destroy")->name("workers.destroy");
+    });
+
+    Route::controller(LogController::class)->group(function () {
+        Route::get("/logs", "index")->name("logs.index");
+        Route::get("/logs/json", "downloadJSON")->name("logs.download");
     });
 });
 

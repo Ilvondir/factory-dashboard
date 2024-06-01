@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Department;
 use App\Models\Position;
+use App\Models\User;
 use App\Models\Worker;
 use App\Policies\DepartmentPolicy;
 use App\Policies\PositionPolicy;
@@ -29,5 +30,9 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Department::class, DepartmentPolicy::class);
         Gate::policy(Position::class, PositionPolicy::class);
         Gate::policy(Worker::class, WorkerPolicy::class);
+
+        Gate::define('downloadLogs', function (User $user) {
+            return $user->role_id == 1;
+        });
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Loggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,6 +21,10 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Log whereOccured($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Log whereOperation($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Log whereUserId($value)
+ * @property int $action_id
+ * @property-read \App\Models\Action $action
+ * @method static \Database\Factories\LogFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|Log whereActionId($value)
  * @mixin \Eloquent
  */
 class Log extends Model
@@ -34,4 +39,10 @@ class Log extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function action()
+    {
+        return $this->belongsTo(Action::class);
+    }
+
 }
