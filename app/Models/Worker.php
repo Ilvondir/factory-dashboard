@@ -57,10 +57,10 @@ class Worker extends Model
             $model->log("Worker " . $model->first_name . " " . $model->last_name . " (" . $model->position->name . ") created.", 1);
         });
         static::updated(function ($model) {
-            $model->log("Worker " . $model->first_name . " " . $model->last_name . " (" . $model->position->name . ")  updated.", 2);
+            $model->log("Worker " . $model->first_name . " " . $model->last_name . " (" . $model->position->name . ") updated.", 2);
         });
         static::deleted(function ($model) {
-            $model->log("Worker " . $model->first_name . " " . $model->last_name . " (" . $model->position->name . ")  deleted.", 3);
+            $model->log("Worker " . $model->first_name . " " . $model->last_name . " (" . $model->position->name . ") deleted.", 3);
         });
     }
 }

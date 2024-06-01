@@ -2,10 +2,14 @@
 import BasePage from "@/components/pages/BasePage.vue";
 import {Log} from "@/models/log";
 import {onMounted} from "vue";
+import {Pagination} from "@/models/pagination";
+import Paginator from "@/components/layout/Paginator.vue";
+import {InputWorker} from "@/models/worker";
 
 
 const props = defineProps<{
-    logs: Log[]
+    logs: Pagination<Log>
+    canDownloadLogs: boolean
 }>();
 
 onMounted(() => {
@@ -30,8 +34,14 @@ onMounted(() => {
             also pave the way for continuous improvement and innovation in manufacturing practices.
         </p>
 
-        <div class="font-courier overflow-x-scroll">
-            <p v-for="item in logs" style="white-space: nowrap;">
+        <div class="d-flex justify-content-end mb-3 mt-3">
+            <a href="/logs/json" class="btn btn-success" download v-if="canDownloadLogs">
+                <i class="bi bi-filetype-json"></i> Download logs
+            </a>
+        </div>
+
+        <div class="font-courier overflow-x-scroll mb-3">
+            <p v-for="item in logs.data" style="white-space: nowrap;">
                 {{ item.user.first_name }} {{ item.user.last_name }} ({{ item.user.email }})
                 [<span :style="'color: ' + item.action.color">{{ item.action.name.toUpperCase() }}</span>]
                 {{ item.occured }} |
@@ -39,6 +49,7 @@ onMounted(() => {
             </p>
         </div>
 
+        <Paginator :items="logs"/>
 
     </BasePage>
 </template>
