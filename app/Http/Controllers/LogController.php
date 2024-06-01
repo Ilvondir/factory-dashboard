@@ -32,7 +32,7 @@ class LogController extends Controller
 
         $filename = "logs" . date("YmdHis") . ".json";
 
-        return Response::make(json_encode($logs), 200, [
+        return Response::make($logs->toJson(JSON_PRETTY_PRINT), 200, [
             'Content-Type' => 'text/json',
             'Content-Disposition' => 'attachment; filename="' . $filename . '"',
         ]);
