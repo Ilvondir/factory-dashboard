@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\LogController;
+use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\PositionController;
 use App\Http\Controllers\WorkerController;
 use App\Http\Middleware\RedirectToHomeIfLogin;
@@ -66,6 +67,10 @@ Route::middleware(RedirectToLoginIfNotLogin::class)->group(function () {
     Route::controller(LogController::class)->group(function () {
         Route::get("/logs", "index")->name("logs.index");
         Route::get("/logs/json", "downloadJSON")->name("logs.download");
+    });
+
+    Route::controller(MaterialController::class)->group(function () {
+        Route::get("/materials", "index")->name("materials.index");
     });
 });
 

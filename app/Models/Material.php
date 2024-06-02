@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use App\Traits\Loggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $name
@@ -26,7 +27,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Material extends Model
 {
-    use HasFactory;
+    use HasFactory, Loggable;
 
     public $timestamps = false;
     public $guarded = [];
@@ -35,5 +36,19 @@ class Material extends Model
     {
         //return $this->belongsToMany(RelatedModel, pivot_table_name, foreign_key_of_current_model_in_pivot_table, foreign_key_of_other_model_in_pivot_table);
         return $this->belongsToMany(Product::class, "products_materials", "material_id", "product_id");
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::created(function ($model) {
+            $model->log("Material " . $model->name . " created.", 1);
+        });
+        static::updated(function ($model) {
+            $model->log("Material " . $model->name . " updated.", 2);
+        });
+        static::deleted(function ($model) {
+            $model->log("Material " . $model->name . " deleted.", 3);
+        });
     }
 }

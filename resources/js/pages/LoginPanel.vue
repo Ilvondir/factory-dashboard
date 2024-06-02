@@ -18,7 +18,7 @@ defineProps<{
 
 <template>
     <inertia-head>
-        <title>Login</title>
+        <title>Factory | Login</title>
     </inertia-head>
 
     <div class="col-12 col-md-4 offset-md-4 mt-5">

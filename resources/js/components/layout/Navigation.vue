@@ -50,7 +50,7 @@ const logout = () => {
                             </inertia-link>
                         </li>
                         <li>
-                            <inertia-link href="/" class="nav-link text-white">
+                            <inertia-link href="/materials" class="nav-link text-white">
                                 <i class="bi-box-seam"></i> Materials
                             </inertia-link>
                         </li>

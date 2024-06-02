@@ -57,7 +57,7 @@ const handleCreate = () => {
 
 <template>
     <inertia-head>
-        <title>Departments</title>
+        <title>Factory | Departments</title>
     </inertia-head>
 
     <BasePage title="Departments">

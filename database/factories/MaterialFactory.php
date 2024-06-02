@@ -18,7 +18,7 @@ class MaterialFactory extends Factory
     {
         return [
             "name" => fake()->unique()->word(),
-            "quantity" => fake()->numberBetween(0, 50),
+            "amount" => fake()->numberBetween(0, 50),
             "added" => fake()->date(),
         ];
     }

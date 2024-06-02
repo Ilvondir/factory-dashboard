@@ -79,7 +79,7 @@ onMounted(() => {
 <template>
 
     <inertia-head>
-        <title>Workers</title>
+        <title>Factory | Workers</title>
     </inertia-head>
 
     <BasePage title="Workers">

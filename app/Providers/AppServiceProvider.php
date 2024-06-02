@@ -3,10 +3,12 @@
 namespace App\Providers;
 
 use App\Models\Department;
+use App\Models\Material;
 use App\Models\Position;
 use App\Models\User;
 use App\Models\Worker;
 use App\Policies\DepartmentPolicy;
+use App\Policies\MaterialPolicy;
 use App\Policies\PositionPolicy;
 use App\Policies\WorkerPolicy;
 use Illuminate\Support\Facades\Gate;
@@ -34,5 +36,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('downloadLogs', function (User $user) {
             return $user->role_id == 1;
         });
+
+        Gate::policy(Material::class, MaterialPolicy::class);
     }
 }

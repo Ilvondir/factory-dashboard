@@ -22,7 +22,7 @@ defineProps<{
 
 <template>
     <inertia-head>
-        <title>Home</title>
+        <title>Factory | Home</title>
     </inertia-head>
 
     <BasePage title="Home">
