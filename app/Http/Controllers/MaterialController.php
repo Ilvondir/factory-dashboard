@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Material;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
 class MaterialController extends Controller
@@ -54,6 +55,10 @@ class MaterialController extends Controller
      */
     public function destroy(Material $material)
     {
-        //
+        Gate::authorize("delete", $material);
+
+        Material::destroy($material->id);
+
+        return back();
     }
 }
