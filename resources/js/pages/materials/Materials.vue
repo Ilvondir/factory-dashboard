@@ -10,7 +10,8 @@ const props = defineProps<{
     materials: Material[],
     canCreateMaterials: boolean,
     canUpdateMaterials: boolean[],
-    canDeleteMaterials: boolean[]
+    canDeleteMaterials: boolean[],
+    canChangeAmount: boolean
 }>();
 
 const handleDelete = () => {

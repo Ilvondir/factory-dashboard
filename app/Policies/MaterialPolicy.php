@@ -32,8 +32,8 @@ class MaterialPolicy
         return $user->role_id === 1 && count($material->products) === 0;
     }
 
-    public function changeAmount(User $user, Material $material)
+    public function changeAmount(User $user)
     {
-        return $user->role_id === 1;
+        return $user->role_id == 1;
     }
 }

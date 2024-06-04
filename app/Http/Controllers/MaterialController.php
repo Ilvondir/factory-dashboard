@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Material;
+use Composer\Pcre\MatchResult;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
@@ -29,7 +30,8 @@ class MaterialController extends Controller
             "materials" => $materials,
             "canCreateMaterials" => \Auth::user()->can("create", Material::class),
             "canUpdateMaterials" => $canUpdateMaterials,
-            "canDeleteMaterials" => $canDeleteMaterials
+            "canDeleteMaterials" => $canDeleteMaterials,
+            "canChangeAmount" => \Auth::user()->can("changeAmount", $materials[0])
         ]);
     }
 
