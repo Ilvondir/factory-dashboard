@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\MaterialRequest;
 use App\Models\Material;
 use Composer\Pcre\MatchResult;
 use Illuminate\Http\Request;
@@ -39,9 +40,14 @@ class MaterialController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(MaterialRequest $request)
     {
-        //
+        Gate::authorize("create", Material::class);
+
+        date_default_timezone_set("Europe/Warsaw");
+        Material::create($request->validated() + ["added" => date("Y/m/d")]);
+
+        return back();
     }
 
     /**

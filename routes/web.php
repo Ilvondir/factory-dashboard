@@ -72,6 +72,7 @@ Route::middleware(RedirectToLoginIfNotLogin::class)->group(function () {
     Route::controller(MaterialController::class)->group(function () {
         Route::get("/materials", "index")->name("materials.index");
         Route::delete("/materials/{material}", "destroy")->name("materials.index");
+        Route::post("/materials", "store")->name("materials.store");
     });
 });
 

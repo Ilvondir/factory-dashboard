@@ -4,3 +4,8 @@ export interface Material {
     amount: number,
     added: Date;
 }
+
+export class InputMaterial {
+    name: string = ""
+    amount: number = 0
+}
