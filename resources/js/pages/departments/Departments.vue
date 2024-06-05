@@ -82,39 +82,40 @@ const handleCreate = () => {
             </button>
         </div>
 
-
-        <table class="table table-hover table-striped">
-            <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Positions</th>
-                <th scope="col" v-if="canUpdateDepartments.includes(true)">Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="(item, index) in departments">
-                <th scope="row">{{ index + 1 }}</th>
-                <td>{{ item.name }}</td>
-                <td>{{ positionsCounts[index] }} positions</td>
-                <td>
-                    <button class="btn btn-primary me-1" v-if="canUpdateDepartments[index]" data-bs-toggle="modal"
-                            data-bs-target="#updateModal" @click="() => {
+        <div class="overflow-x-scroll">
+            <table class="table table-hover table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Positions</th>
+                    <th scope="col" v-if="canUpdateDepartments.includes(true)">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="(item, index) in departments">
+                    <th scope="row">{{ index + 1 }}</th>
+                    <td>{{ item.name }}</td>
+                    <td>{{ positionsCounts[index] }} positions</td>
+                    <td>
+                        <button class="btn btn-primary me-1" v-if="canUpdateDepartments[index]" data-bs-toggle="modal"
+                                data-bs-target="#updateModal" @click="() => {
                                 departmentToUpdate = {...item}
                                 idToUpdate = item.id
                                 localErrors = {} as InputDepartment
                             }">
-                        <i class="bi bi-pen"></i>
-                    </button>
-                    <button v-if="canDeleteDepartments[index]" class="btn btn-danger ms-1" data-bs-toggle="modal"
-                            data-bs-target="#deleteModal"
-                            @click="departmentToDelete = item">
-                        <i class="bi bi-trash"></i>
-                    </button>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+                            <i class="bi bi-pen"></i>
+                        </button>
+                        <button v-if="canDeleteDepartments[index]" class="btn btn-danger ms-1" data-bs-toggle="modal"
+                                data-bs-target="#deleteModal"
+                                @click="departmentToDelete = item">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
 
     </BasePage>
 

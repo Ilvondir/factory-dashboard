@@ -2,7 +2,7 @@
 import BasePage from "../components/pages/BasePage.vue";
 import {usePage} from "@inertiajs/vue3";
 import {User} from "@/models/user";
-import StandardBsCard from "../components/cards/StandardBsCard.vue";
+import StandardBsCard from "../components/cards/StandardCard.vue";
 
 const page = usePage();
 

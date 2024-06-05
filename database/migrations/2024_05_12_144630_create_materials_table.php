@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->string("name");
             $table->integer("amount");
-            $table->date("added");
+            $table->timestamps();
         });
     }
 

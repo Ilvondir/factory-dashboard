@@ -119,62 +119,64 @@ onMounted(() => {
             </button>
         </div>
 
+        <div class="overflow-x-scroll">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th>Name</th>
+                    <th>Workers</th>
+                    <th>Department</th>
+                    <th v-if="canUpdatePositions.includes(true)" style="min-width: 130px">
+                        Actions
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
 
-        <table class="table table-hover">
-            <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th>Name</th>
-                <th>Workers</th>
-                <th>Department</th>
-                <th v-if="canUpdatePositions.includes(true)" style="min-width: 130px">
-                    Actions
-                </th>
-            </tr>
-            </thead>
-            <tbody>
+                <template v-for="(item, index) in positions.data">
 
-            <template v-for="(item, index) in positions.data">
-
-                <tr @click="details = index">
-                    <th scope="row">{{ index + 1 + (positions.current_page - 1) * positions.per_page }}</th>
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.workers.length }} workers</td>
-                    <td>{{ item.department.name }}</td>
-                    <td v-if="canUpdatePositions.includes(true)">
-                        <button class="btn btn-primary me-1" v-if="canUpdatePositions[index]"
-                                data-bs-toggle="modal" data-bs-target="#updateModal"
-                                @click="() => {
+                    <tr @click="details = index">
+                        <th scope="row">{{ index + 1 + (positions.current_page - 1) * positions.per_page }}</th>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.workers.length }} workers</td>
+                        <td>{{ item.department.name }}</td>
+                        <td v-if="canUpdatePositions.includes(true)">
+                            <button class="btn btn-primary me-1" v-if="canUpdatePositions[index]"
+                                    data-bs-toggle="modal" data-bs-target="#updateModal"
+                                    @click="() => {
                                     idToUpdate = item.id;
                                     positionToUpdate.responsibilities = item.responsibilities;
                                     positionToUpdate.name = item.name;
                                     positionToUpdate.department_id = item.department.id;
                                     localErrors = {} as InputPosition;
                             }">
-                            <i class="bi bi-pen"></i>
-                        </button>
+                                <i class="bi bi-pen"></i>
+                            </button>
 
-                        <button class="btn btn-danger ms-1" v-if="canDeletePositions[index]"
-                                data-bs-toggle="modal" data-bs-target="#deleteModal"
-                                @click="itemToDelete = item">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </td>
+                            <button class="btn btn-danger ms-1" v-if="canDeletePositions[index]"
+                                    data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                    @click="itemToDelete = item">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
 
-                </tr>
+                    </tr>
 
-                <tr :style="details === index ? show : hide" class="break-text">
-                    <td :colspan="canUpdatePositions.includes(true) ? 5 : 4"
-                        :style="details !== index ? cellHide : cell">
-                        {{ item.responsibilities }}
-                    </td>
-                </tr>
+                    <tr :style="details === index ? show : hide" class="break-text">
+                        <td :colspan="canUpdatePositions.includes(true) ? 5 : 4"
+                            :style="details !== index ? cellHide : cell">
+                            {{ item.responsibilities }}
+                        </td>
+                    </tr>
 
-            </template>
+                </template>
 
 
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
+
 
         <Paginator :items="positions"/>
 

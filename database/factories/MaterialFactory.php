@@ -19,7 +19,6 @@ class MaterialFactory extends Factory
         return [
             "name" => fake()->word() . " " . fake()->word(),
             "amount" => fake()->numberBetween(0, 50),
-            "added" => fake()->date(),
         ];
     }
 }

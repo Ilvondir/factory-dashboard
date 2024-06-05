@@ -2,7 +2,8 @@ export interface Material {
     id: number,
     name: string,
     amount: number,
-    added: Date;
+    created_at: Date;
+    updated_at: Date;
 }
 
 export class InputMaterial {

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\Loggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon;
 
 /**
  *
@@ -29,8 +30,17 @@ class Material extends Model
 {
     use HasFactory, Loggable;
 
-    public $timestamps = false;
     public $guarded = [];
+
+    public function getCreatedAtAttribute($date)
+    {
+        return Carbon\Carbon::parse($date)->format("d.m.Y, H:i:s");
+    }
+
+    public function getUpdatedAtAttribute($date)
+    {
+        return Carbon\Carbon::parse($date)->format("d.m.Y, H:i:s");
+    }
 
     public function products()
     {

@@ -110,26 +110,28 @@ onMounted(() => {
             </button>
         </div>
 
-        <table class="table table-hover table-striped">
-            <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th>Name</th>
-                <th>Position</th>
-                <th>Hired</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="(item, index) in workers.data" data-bs-toggle="offcanvas" data-bs-target="#workerOffcanvas"
-                aria-controls="offcanvasRight"
-                @click="() => {currentWorker = item; isWorkerSelected = true; indexOfCurrentWorker = index}">
-                <th>{{ index + 1 + 10 * (workers.current_page - 1) }}</th>
-                <td>{{ item.first_name + " " + item.last_name }}</td>
-                <td>{{ item.position.name }}</td>
-                <td>{{ item.hired }}</td>
-            </tr>
-            </tbody>
-        </table>
+        <div class="overflow-x-scroll">
+            <table class="table table-hover table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th>Name</th>
+                    <th>Position</th>
+                    <th>Hired</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="(item, index) in workers.data" data-bs-toggle="offcanvas" data-bs-target="#workerOffcanvas"
+                    aria-controls="offcanvasRight"
+                    @click="() => {currentWorker = item; isWorkerSelected = true; indexOfCurrentWorker = index}">
+                    <th>{{ index + 1 + 10 * (workers.current_page - 1) }}</th>
+                    <td>{{ item.first_name + " " + item.last_name }}</td>
+                    <td>{{ item.position.name }}</td>
+                    <td>{{ item.hired }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
 
         <Paginator :items="workers"/>
 
