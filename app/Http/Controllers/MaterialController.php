@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\MaterialChangeAmountRequest;
 use App\Http\Requests\MaterialStoreRequest;
 use App\Http\Requests\MaterialUpdateRequest;
 use App\Models\Material;
@@ -46,7 +47,9 @@ class MaterialController extends Controller
         Gate::authorize("create", Material::class);
 
         date_default_timezone_set("Europe/Warsaw");
-        Material::create($request->validated());
+        $material = Material::create($request->validated());
+
+        $material->log("Material " . $material->name . " created.", 1);
 
         return back();
     }
@@ -56,6 +59,7 @@ class MaterialController extends Controller
         Gate::authorize("update", $material);
 
         $material->update($request->validated());
+        $material->log("Material " . $material->name . " updated.", 2);
 
         return back();
     }
@@ -67,7 +71,36 @@ class MaterialController extends Controller
     {
         Gate::authorize("delete", $material);
 
+        $material->log("Material " . $material->name . " deleted.", 3);
         Material::destroy($material->id);
+
+        return back();
+    }
+
+    public function addAmount(MaterialChangeAmountRequest $request, Material $material)
+    {
+        Gate::authorize("changeAmount", $material);
+
+        $value = $request->validated()["value"];
+
+        $material->amount += $value;
+        $material->save();
+
+        $material->log("Added " . $value . " items of " . $material->name . " to the warehouse.", 4);
+
+        return back();
+    }
+
+    public function removeAmount(MaterialChangeAmountRequest $request, Material $material)
+    {
+        Gate::authorize("changeAmount", $material);
+
+        $value = $request->validated()["value"];
+
+        $material->amount -= $value;
+        $material->save();
+
+        $material->log("Removed " . $value . " items of " . $material->name . " from the warehouse.", 4);
 
         return back();
     }

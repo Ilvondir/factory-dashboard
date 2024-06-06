@@ -29,7 +29,7 @@ class MaterialPolicy
      */
     public function delete(User $user, Material $material): bool
     {
-        return $user->role_id === 1 && count($material->products) === 0;
+        return $user->role_id === 1 && count($material->products) === 0 && $material->amount === 0;
     }
 
     public function changeAmount(User $user)

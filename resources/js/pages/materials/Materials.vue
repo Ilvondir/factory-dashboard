@@ -8,6 +8,7 @@ const materialToDelete = ref({} as Material);
 const materialToCreate = ref(new InputMaterial() as InputMaterial);
 const materialToEdit = ref({} as Material);
 const localErrors = ref({} as InputMaterial | Object);
+const value = ref(0 as number);
 
 const props = defineProps<{
     materials: Material[],
@@ -55,6 +56,26 @@ const handleUpdate = () => {
     })
 }
 
+const handleAddAmount = () => {
+    router.put(`/materials/${materialToEdit.value.id}/add-amount`, {"value": value.value}, {
+        preserveScroll: true,
+        onSuccess: () => {
+            const closeButton = document.getElementById("closeAddAmountModal");
+            if (closeButton) closeButton.click();
+        }
+    })
+}
+
+const handleRemoveAmount = () => {
+    router.put(`/materials/${materialToEdit.value.id}/remove-amount`, {"value": value.value}, {
+        preserveScroll: true,
+        onSuccess: () => {
+            const closeButton = document.getElementById("closeRemoveAmountModal");
+            if (closeButton) closeButton.click();
+        }
+    })
+}
+
 onMounted(() => {
     console.log(props);
 });
@@ -79,7 +100,8 @@ onMounted(() => {
         </p>
 
         <p v-if="canUpdateMaterials.includes(true)">
-            <strong>Material can only be deleted if no product uses it.</strong>
+            <strong>Material can only be removed if it is not used by any product and there are no pieces of it in
+                stock.</strong>
         </p>
 
         <div v-if="canCreateMaterials" class="d-flex justify-content-end mb-3 mt-3">
@@ -110,16 +132,26 @@ onMounted(() => {
                         {{ item.updated_at }}
                     </td>
                     <td>
-                        <button class="btn btn-warning me-1">
+                        <button class="btn btn-warning" v-if="canChangeAmount"
+                                data-bs-toggle="modal" data-bs-target="#removeAmountModal"
+                                @click="() => {
+                                    materialToEdit = { ...item };
+                                    value = 0;
+                                }">
                             <i class="bi bi-bag-dash"></i>
                         </button>
 
-                        <div style="min-width:60px; display: inline-block; text-align:center">
+                        <div style="min-width: 30%; display: inline-block; text-align:center">
                             {{ item.amount }}
                         </div>
 
 
-                        <button class="btn btn-warning ms-1">
+                        <button class="btn btn-warning" v-if="canChangeAmount"
+                                data-bs-toggle="modal" data-bs-target="#addAmountModal"
+                                @click="() => {
+                                    materialToEdit = { ...item };
+                                    value = 0;
+                                }">
                             <i class="bi bi-bag-plus"></i>
                         </button>
                     </td>
@@ -245,6 +277,78 @@ onMounted(() => {
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">
                             Update material
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="addAmountModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Add {{ materialToEdit.name }} to warehouse</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                            id="closeAddAmountModal"></button>
+                </div>
+
+                <form @submit.prevent="handleAddAmount">
+
+                    <div class="modal-body">
+
+                        <div class="mb-3">
+                            <label for="value" class="form-label">Value:</label>
+                            <input type="number" min="0" step="1"
+                                   class="form-control" id="value"
+                                   v-model="value"
+                                   placeholder="Enter amount to add"
+                                   required>
+                        </div>
+
+                    </div>
+
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-warning">Add
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="removeAmountModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Remove {{ materialToEdit.name }} from warehouse</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                            id="closeRemoveAmountModal"></button>
+                </div>
+
+                <form @submit.prevent="handleRemoveAmount">
+
+                    <div class="modal-body">
+
+                        <div class="mb-3">
+                            <label for="value" class="form-label">Value:</label>
+                            <input type="number" min="0" :max="materialToEdit.amount" step="1"
+                                   class="form-control" id="value"
+                                   v-model="value"
+                                   placeholder="Enter amount to remove"
+                                   required>
+                        </div>
+
+                    </div>
+
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-warning">Remove
                         </button>
                     </div>
                 </form>

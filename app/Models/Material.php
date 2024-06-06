@@ -24,6 +24,12 @@ use Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|Material whereName($value)
  * @property int $quantity
  * @method static \Illuminate\Database\Eloquent\Builder|Material whereQuantity($value)
+ * @property int $amount
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|Material whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Material whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Material whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 class Material extends Model
@@ -46,19 +52,5 @@ class Material extends Model
     {
         //return $this->belongsToMany(RelatedModel, pivot_table_name, foreign_key_of_current_model_in_pivot_table, foreign_key_of_other_model_in_pivot_table);
         return $this->belongsToMany(Product::class, "products_materials", "material_id", "product_id");
-    }
-
-    protected static function boot()
-    {
-        parent::boot();
-        static::created(function ($model) {
-            $model->log("Material " . $model->name . " created.", 1);
-        });
-        static::updated(function ($model) {
-            $model->log("Material " . $model->name . " updated.", 2);
-        });
-        static::deleted(function ($model) {
-            $model->log("Material " . $model->name . " deleted.", 3);
-        });
     }
 }

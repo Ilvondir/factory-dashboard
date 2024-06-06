@@ -74,6 +74,8 @@ Route::middleware(RedirectToLoginIfNotLogin::class)->group(function () {
         Route::delete("/materials/{material}", "destroy")->name("materials.index");
         Route::post("/materials", "store")->name("materials.store");
         Route::put("/materials/{material}", "update")->name("materials.update");
+        Route::put("/materials/{material}/add-amount", "addAmount")->name("materials.addAmount");
+        Route::put("/materials/{material}/remove-amount", "removeAmount")->name("materials.removeAmount");
     });
 });
 
