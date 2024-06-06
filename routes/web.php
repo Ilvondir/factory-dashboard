@@ -24,6 +24,14 @@ Route::controller(AuthController::class)->group(function () {
     Route::post("/logout", "logout")->name('logout')->middleware(RedirectToLoginIfNotLogin::class);
 });
 
+Route::get("/403", function () {
+    return Inertia::render("errors/Error403");
+})->name("error403");
+
+Route::get("/404", function () {
+    return Inertia::render("errors/Error404");
+})->name("error404");
+
 Route::middleware(RedirectToLoginIfNotLogin::class)->group(function () {
 
     Route::get('/', function () {
@@ -79,3 +87,6 @@ Route::middleware(RedirectToLoginIfNotLogin::class)->group(function () {
     });
 });
 
+Route::fallback(function () {
+    return redirect()->route("error404");
+});
