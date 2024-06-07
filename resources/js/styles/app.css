@@ -17,3 +17,7 @@
 .btn-warning:hover {
     box-shadow: 0 0 15px #FFC10790;
 }
+
+.odometer-value {
+    font-family: inherit;
+}

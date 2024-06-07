@@ -18,7 +18,7 @@ class MaterialController extends Controller
      */
     public function index()
     {
-        $materials = Material::orderBy("id")->get();
+        $materials = Material::orderBy("id")->paginate(10);
 
         $canUpdateMaterials = [];
         $canDeleteMaterials = [];

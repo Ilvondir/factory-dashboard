@@ -3,6 +3,8 @@ import BasePage from "@/components/pages/BasePage.vue";
 import {type Material, InputMaterial} from "@/models/material";
 import {onMounted, ref} from "vue";
 import {router} from "@inertiajs/vue3";
+import {Pagination} from "@/models/pagination";
+import Paginator from "@/components/layout/Paginator.vue";
 
 const materialToDelete = ref({} as Material);
 const materialToCreate = ref(new InputMaterial() as InputMaterial);
@@ -11,7 +13,7 @@ const localErrors = ref({} as InputMaterial | Object);
 const value = ref(0 as number);
 
 const props = defineProps<{
-    materials: Material[],
+    materials: Pagination<Material>,
     canCreateMaterials: boolean,
     canUpdateMaterials: boolean[],
     canDeleteMaterials: boolean[],
@@ -78,6 +80,15 @@ const handleRemoveAmount = () => {
 
 onMounted(() => {
     console.log(props);
+
+    // let elems = document.getElementsByClassName("odometer");
+    //
+    // for (let i = 0; i < elems.length; i++) {
+    //     new Odometer({
+    //         el: elems[i],
+    //         value: 0
+    //     });
+    // }
 });
 </script>
 
@@ -125,8 +136,8 @@ onMounted(() => {
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="(item, index) in materials">
-                    <th>{{ index + 1 }}</th>
+                <tr v-for="(item, index) in materials.data">
+                    <th>{{ index + 1 + (materials.current_page - 1) * 10 }}</th>
                     <td>{{ item.name }}</td>
                     <td>
                         {{ item.updated_at }}
@@ -144,7 +155,6 @@ onMounted(() => {
                         <div style="min-width: 30%; display: inline-block; text-align:center">
                             {{ item.amount }}
                         </div>
-
 
                         <button class="btn btn-warning" v-if="canChangeAmount"
                                 data-bs-toggle="modal" data-bs-target="#addAmountModal"
@@ -171,6 +181,9 @@ onMounted(() => {
                 </tr>
                 </tbody>
             </table>
+
+            <Paginator :items="materials"/>
+
         </div>
 
     </BasePage>
@@ -216,8 +229,8 @@ onMounted(() => {
 
 
                         <div class="mb-3">
-                            <label for="title" class="form-label">Amount:</label>
-                            <input type="number" min="0" step="1" class="form-control" id="title"
+                            <label for="amount" class="form-label">Amount:</label>
+                            <input type="number" min="0" step="1" class="form-control" id="amount"
                                    v-model="materialToCreate.amount"
                                    placeholder="0" required>
                         </div>
