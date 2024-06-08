@@ -6,6 +6,7 @@ import {router} from "@inertiajs/vue3";
 import Paginator from "@/components/layout/Paginator.vue";
 import {Pagination} from "@/models/pagination";
 import {Department} from "@/models/department";
+import {useToast} from "vue-toastification";
 
 const currentWorker = ref({} as Worker);
 const isWorkerSelected = ref(false as boolean);
@@ -13,6 +14,8 @@ const indexOfCurrentWorker = ref(0 as number);
 const workerToAdd = ref(new InputWorker() as InputWorker);
 const localErrors = ref({} as InputWorker);
 const workerToEdit = ref({} as InputWorker);
+
+const toast = useToast();
 
 
 const props = defineProps<{
@@ -32,6 +35,10 @@ const handleDelete = () => {
             if (offcanvasCloseButton) {
                 offcanvasCloseButton.click();
             }
+
+            toast.error(`Successfully ${currentWorker.value.first_name} ${currentWorker.value.last_name} deleted!`, {
+                icon: false
+            });
         }
     });
 }
@@ -45,6 +52,10 @@ const handleCreate = () => {
             if (closeButton) {
                 closeButton.click();
             }
+
+            toast.success(`Successfully ${workerToAdd.value.first_name} ${workerToAdd.value.last_name} created!`, {
+                icon: false
+            });
 
             workerToAdd.value = new InputWorker();
         },
@@ -65,6 +76,10 @@ const handleUpdate = () => {
             for (let i = 0; i < props.workers.data.length; i++) {
                 if (props.workers.data[i].id === currentWorker.value.id) currentWorker.value = props.workers.data[i];
             }
+
+            toast.info(`Successfully ${currentWorker.value.first_name} ${currentWorker.value.last_name} updated!`, {
+                icon: false
+            });
         },
         onError: () => {
             localErrors.value = props.errors;

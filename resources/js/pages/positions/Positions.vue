@@ -7,6 +7,7 @@ import {router} from "@inertiajs/vue3";
 import {Department, InputDepartment} from "@/models/department";
 import {Pagination} from "@/models/pagination";
 import Paginator from "@/components/layout/Paginator.vue";
+import {useToast} from "vue-toastification";
 
 const itemToDelete = ref({} as Position);
 const positionToCreate = ref(new InputPosition() as InputPosition);
@@ -14,6 +15,8 @@ const localErrors = ref({} as InputPosition);
 const idToUpdate = ref(0 as number);
 const positionToUpdate = ref(new InputPosition() as InputPosition);
 const details = ref(-1 as number);
+
+const toast = useToast();
 
 const props = defineProps<{
     positions: Pagination<Position>,
@@ -48,7 +51,14 @@ const show = {
 }
 
 const handleDelete = () => {
-    router.delete(`positions/${itemToDelete.value.id}`, {preserveScroll: true});
+    router.delete(`positions/${itemToDelete.value.id}`, {
+        preserveScroll: true,
+        onSuccess: () => {
+            toast.error(`Successfully ${itemToDelete.value.name} deleted!`, {
+                icon: false
+            });
+        }
+    });
 }
 
 const handleCreate = () => {
@@ -59,6 +69,11 @@ const handleCreate = () => {
             if (closeButton) {
                 closeButton.click();
             }
+
+            toast.success(`Successfully ${positionToCreate.value.name} created!`, {
+                icon: false
+            });
+
             positionToCreate.value = new InputPosition();
             localErrors.value = {} as InputPosition;
         },
@@ -75,6 +90,10 @@ const handleUpdate = () => {
             if (closeButton) {
                 closeButton.click();
             }
+
+            toast.info(`Successfully ${positionToUpdate.value.name} updated!`, {
+                icon: false
+            });
         },
         onError: () => localErrors.value = props.errors
     })
