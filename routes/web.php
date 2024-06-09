@@ -5,6 +5,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\PositionController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\WorkerController;
 use App\Http\Middleware\RedirectToHomeIfLogin;
 use App\Http\Middleware\RedirectToLoginIfNotLogin;
@@ -24,13 +25,6 @@ Route::controller(AuthController::class)->group(function () {
     Route::post("/logout", "logout")->name('logout')->middleware(RedirectToLoginIfNotLogin::class);
 });
 
-Route::get("/403", function () {
-    return Inertia::render("errors/Error403");
-})->name("error403");
-
-Route::get("/404", function () {
-    return Inertia::render("errors/Error404");
-})->name("error404");
 
 Route::middleware(RedirectToLoginIfNotLogin::class)->group(function () {
 
@@ -79,13 +73,26 @@ Route::middleware(RedirectToLoginIfNotLogin::class)->group(function () {
 
     Route::controller(MaterialController::class)->group(function () {
         Route::get("/materials", "index")->name("materials.index");
-        Route::delete("/materials/{material}", "destroy")->name("materials.index");
+        Route::delete("/materials/{material}", "destroy")->name("materials.destroy");
         Route::post("/materials", "store")->name("materials.store");
         Route::put("/materials/{material}", "update")->name("materials.update");
         Route::put("/materials/{material}/add-amount", "addAmount")->name("materials.addAmount");
         Route::put("/materials/{material}/remove-amount", "removeAmount")->name("materials.removeAmount");
     });
+
+    Route::controller(UserController::class)->group(function () {
+        Route::get("/users", "index")->name("users.index");
+        Route::delete("/users/{user}", "destroy")->name("users.destroy");
+    });
 });
+
+Route::get("/403", function () {
+    return Inertia::render("errors/Error403");
+})->name("error403");
+
+Route::get("/404", function () {
+    return Inertia::render("errors/Error404");
+})->name("error404");
 
 Route::fallback(function () {
     return redirect()->route("error404");

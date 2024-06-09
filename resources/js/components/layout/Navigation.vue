@@ -72,7 +72,7 @@ const logout = () => {
                 <div class="collapse show" id="system-collapse" style="padding-left: 15px">
                     <ul class="m-0 p-0" style="list-style-type: none">
                         <li class="nav-item">
-                            <inertia-link href="#" class="nav-link text-white" aria-current="page">
+                            <inertia-link href="/users" class="nav-link text-white" aria-current="page">
                                 <i class="bi-file-earmark-person"></i> Users
                             </inertia-link>
                         </li>
