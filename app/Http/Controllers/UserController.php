@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserCreateRequest;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -27,7 +29,8 @@ class UserController extends Controller
             "users" => $users->makeHidden('logs'),
             "canCreateUsers" => \Auth::user()->can("create", User::class),
             "canUpdateUsers" => $canUpdateUsers,
-            "canDeleteUsers" => $canDeleteUsers
+            "canDeleteUsers" => $canDeleteUsers,
+            "roles" => Role::orderBy("id")->get()
         ]);
     }
 
@@ -35,7 +38,7 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(UserCreateRequest $request)
     {
         //
     }

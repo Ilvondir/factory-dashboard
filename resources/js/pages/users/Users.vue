@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import BasePage from "@/components/pages/BasePage.vue";
-import {User} from "../../models/user";
+import {InputUser, User} from "../../models/user";
 import {onMounted, ref} from "vue";
 import {router} from "@inertiajs/vue3";
 import {useToast} from "vue-toastification";
+import {Role} from "@/models/role";
 
 const userToDelete = ref({} as User);
+const userToCreate = ref(new InputUser() as InputUser);
 
 const toast = useToast();
 
@@ -13,14 +15,17 @@ const props = defineProps<{
     users: User[],
     canCreateUsers: boolean,
     canUpdateUsers: boolean[],
-    canDeleteUsers: boolean[]
+    canDeleteUsers: boolean[],
+    roles: Role[]
 }>();
 
 
 const handleDelete = () => {
     router.delete(`/users/${userToDelete.value.id}`, {
         preserveScroll: true,
-        onSuccess: () => toast.error(`Successfully ${userToDelete.value.first_name} ${userToDelete.value.last_name} deleted!`)
+        onSuccess: () => toast.error(`Successfully ${userToDelete.value.first_name} ${userToDelete.value.last_name} deleted!`, {
+            icon: false
+        })
     })
 }
 
@@ -41,6 +46,15 @@ onMounted(() => {
         </p>
 
         <strong v-if="canDeleteUsers.includes(true)">You cannot remove yourself!</strong>
+
+        <div v-if="canCreateUsers" class="d-flex justify-content-end mb-3 mt-3">
+            <button class="btn btn-primary"
+                    data-bs-toggle="modal"
+                    data-bs-target="#createModal"
+                    @click="">
+                <i class="bi bi-plus-lg"></i> Add new user
+            </button>
+        </div>
 
         <div class="overflow-x-scroll">
             <table class="table table-striped table-hover">
@@ -105,5 +119,84 @@ onMounted(() => {
         </div>
     </div>
 
+
+    <div class="modal modal-lg fade" id="createModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Create new user</h1>
+                    <button type="button" class="btn-close" id="closeCreateModal" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <form @submit.prevent="">
+                    <div class="modal-body">
+
+                        <div class="row">
+                            <div class="col-12 col-lg-6">
+                                <div class="mb-3">
+                                    <label for="first_name" class="form-label">First name:</label>
+                                    <input type="text" class="form-control" id="first_name"
+                                           v-model="userToCreate.first_name"
+                                           placeholder="First name" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-lg-6">
+                                <div class="mb-3">
+                                    <label for="last_name" class="form-label">Last name:</label>
+                                    <input type="text" class="form-control" id="last_name"
+                                           v-model="userToCreate.last_name"
+                                           placeholder="Last name" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 col-lg-6">
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email:</label>
+                                    <input type="email" class="form-control" id="email"
+                                           v-model="userToCreate.email"
+                                           placeholder="Email" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-lg-6">
+                                <div class="mb-3">
+                                    <label for="role" class="form-label">Role:</label>
+                                    <select
+                                        class="form-select" id="role" required
+                                        @change="(event) => userToCreate.department_id = event.target ? event.target.selectedOptions[0].value : 0"
+                                    >
+                                        <option value="" disabled selected>Select role</option>
+                                        <option v-for="r in roles" :value="r.id">
+                                            {{ r.name }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!--                        <div v-if="Object.keys(localErrors).length > 0"-->
+                        <!--                             class="alert-danger alert">-->
+                        <!--                            <ul class="m-0">-->
+                        <!--                                <li v-for="er in localErrors">-->
+                        <!--                                    {{ er }}-->
+                        <!--                                </li>-->
+                        <!--                            </ul>-->
+                        <!--                        </div>-->
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">
+                            Create user
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
 </template>
