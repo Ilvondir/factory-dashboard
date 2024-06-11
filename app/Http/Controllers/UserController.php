@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserCreateRequest;
+use App\Http\Requests\UserUpdateRequest;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -15,7 +16,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::with(['role', 'logs'])->orderBy("role_id")->orderBy("id")->get();
+        $users = User::with(['role'])->orderBy("role_id")->orderBy("id")->paginate(10);
 
         $canDeleteUsers = [];
         $canUpdateUsers = [];
@@ -26,7 +27,7 @@ class UserController extends Controller
         }
 
         return Inertia::render("users/Users", [
-            "users" => $users->makeHidden('logs'),
+            "users" => $users,
             "canCreateUsers" => \Auth::user()->can("create", User::class),
             "canUpdateUsers" => $canUpdateUsers,
             "canDeleteUsers" => $canDeleteUsers,
@@ -40,16 +41,24 @@ class UserController extends Controller
      */
     public function store(UserCreateRequest $request)
     {
-        //
+        \Gate::authorize('create', User::class);
+
+        User::create($request->validated() + ['password' => \Hash::make('password')]);
+
+        return back();
     }
 
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(UserUpdateRequest $request, User $user)
     {
-        //
+        \Gate::authorize('update', $user);
+
+        $user->update($request->validated());
+
+        return back();
     }
 
 
