@@ -7,7 +7,6 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 
 class TestEvent implements ShouldBroadcastNow
 {
@@ -21,9 +20,10 @@ class TestEvent implements ShouldBroadcastNow
      */
     public function __construct()
     {
+        //
     }
 
-    public function broadcastWith()
+    public function broadcastWith(): array|string
     {
         return [
             "message" => "dupd dupadupadupa"
@@ -35,8 +35,13 @@ class TestEvent implements ShouldBroadcastNow
      *
      * @return Channel
      */
-    public function broadcastOn()
+    public function broadcastOn(): Channel
     {
         return new Channel('logs');
+    }
+
+    public function broadcastAs(): string
+    {
+        return "TestEvent";
     }
 }

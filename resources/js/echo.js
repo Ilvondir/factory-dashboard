@@ -1,4 +1,7 @@
-import Echo from "laravel-echo"
+import Echo from "laravel-echo";
+import Pusher from 'pusher-js';
+
+window.Pusher = Pusher;
 
 window.Echo = new Echo({
     broadcaster: 'pusher',
@@ -7,7 +10,9 @@ window.Echo = new Echo({
     encrypted: true
 });
 
-Echo.private('chat')
-    .listen('message', (e) => {
+window.Echo
+    .channel('logs')
+    .listen('.TestEvent', (e) => {
+        console.log("Event otrzymany");
         console.log(e);
-    })
+    });

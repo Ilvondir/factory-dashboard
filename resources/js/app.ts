@@ -11,6 +11,7 @@ import 'bootstrap/dist/js/bootstrap.min.js';
 
 import "./styles/app.css";
 
+import './bootstrap';
 
 createInertiaApp({
     resolve: name => {
