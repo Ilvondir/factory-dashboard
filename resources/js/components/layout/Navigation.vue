@@ -12,13 +12,13 @@ const manufactoryShow = ref("show" as string);
 const systemShow = ref("show" as string);
 
 const changeStateManufactory = () => {
-    if (manufactoryShow.value === "") {
-        manufactoryShow.value = "show";
-        localStorage.setItem('manufactoryShow', "show")
-    } else {
-        manufactoryShow.value = "";
-        localStorage.setItem('manufactoryShow', "")
-    }
+    if (localStorage.getItem("manufactoryShow") === "") localStorage.setItem('manufactoryShow', "show")
+    else localStorage.setItem('manufactoryShow', "");
+}
+
+const changeStateSystem = () => {
+    if (localStorage.getItem("systemShow") === "") localStorage.setItem('systemShow', "show")
+    else localStorage.setItem('systemShow', "");
 }
 
 const logout = () => {
@@ -26,9 +26,17 @@ const logout = () => {
 }
 
 onMounted(() => {
-    manufactoryShow.value = localStorage.getItem("manufactoryShow") ? localStorage.getItem("manufactoryShow") : "";
-    systemShow.value = localStorage.getItem("systemShow") ? localStorage.getItem("systemShow") : "";
+    const savedManufactoryShow = localStorage.getItem('manufactoryShow');
+    if (savedManufactoryShow != null) {
+        manufactoryShow.value = savedManufactoryShow;
+    }
+
+    const savedSystemShow = localStorage.getItem('systemShow');
+    if (savedSystemShow != null) {
+        systemShow.value = savedSystemShow;
+    }
 });
+
 </script>
 
 <template>
@@ -48,7 +56,7 @@ onMounted(() => {
 
             <li class="mb-1 nav-item">
                 <a class="btn btn-toggle align-items-center rounded text-white fs-5" data-bs-toggle="collapse"
-                   data-bs-target="#manufactory-collapse" aria-expanded="true" @onclick="changeStateManufactory">
+                   data-bs-target="#manufactory-collapse" aria-expanded="true" @click="changeStateManufactory">
                     <i class="bi-gear"></i> Manufactory
                 </a>
                 <div :class="'collapse ' + manufactoryShow" id="manufactory-collapse" style="padding-left: 15px">
@@ -85,7 +93,7 @@ onMounted(() => {
 
             <li class="mb-1 nav-item">
                 <a class="btn btn-toggle align-items-center rounded text-white fs-5" data-bs-toggle="collapse"
-                   data-bs-target="#system-collapse" aria-expanded="true">
+                   data-bs-target="#system-collapse" aria-expanded="true" @click="changeStateSystem">
                     <i class="bi-device-ssd"></i> System
                 </a>
                 <div :class="'collapse ' + systemShow" id="system-collapse" style="padding-left: 15px">

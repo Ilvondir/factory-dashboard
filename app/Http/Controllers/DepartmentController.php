@@ -46,8 +46,8 @@ class DepartmentController extends Controller
     {
         Gate::authorize('create', Department::class);
 
-        event(new TestEvent());
-//        broadcast(new TestEvent())->toOthers();
+//        event(new TestEvent());
+        broadcast(new TestEvent())->toOthers();
 
         Department::create($request->validated());
         return redirect()->route("departments.index");
@@ -58,7 +58,7 @@ class DepartmentController extends Controller
      */
     public function update(DepartmentRequest $request, Department $department)
     {
-        Gate::authorize('update', Department::class);
+        Gate::authorize('update', $department);
         $department->update($request->validated());
         return redirect()->route("departments.index");
     }
