@@ -123,7 +123,7 @@ onMounted(() => {
                 </thead>
                 <tbody>
                 <tr v-for="(item, index) in users.data">
-                    <th>{{ index + 1 }}</th>
+                    <th>{{ index + 1 + (users.current_page - 1) * users.per_page }}</th>
                     <td>{{ item.first_name }} {{ item.last_name }}</td>
                     <td>
                         <a :href="'mailto:' + item.email" class="text-decoration-none text-black">

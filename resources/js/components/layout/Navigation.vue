@@ -1,15 +1,34 @@
 <script setup lang="ts">
 import {router, usePage} from "@inertiajs/vue3";
 import {User} from "@/models/user";
+import {onMounted, ref} from "vue";
 
 const page = usePage();
 
 // @ts-ignore
 const user: User = page.props.user;
 
+const manufactoryShow = ref("show" as string);
+const systemShow = ref("show" as string);
+
+const changeStateManufactory = () => {
+    if (manufactoryShow.value === "") {
+        manufactoryShow.value = "show";
+        localStorage.setItem('manufactoryShow', "show")
+    } else {
+        manufactoryShow.value = "";
+        localStorage.setItem('manufactoryShow', "")
+    }
+}
+
 const logout = () => {
     router.post("/logout");
 }
+
+onMounted(() => {
+    manufactoryShow.value = localStorage.getItem("manufactoryShow") ? localStorage.getItem("manufactoryShow") : "";
+    systemShow.value = localStorage.getItem("systemShow") ? localStorage.getItem("systemShow") : "";
+});
 </script>
 
 <template>
@@ -29,10 +48,10 @@ const logout = () => {
 
             <li class="mb-1 nav-item">
                 <a class="btn btn-toggle align-items-center rounded text-white fs-5" data-bs-toggle="collapse"
-                   data-bs-target="#manufactory-collapse" aria-expanded="true">
+                   data-bs-target="#manufactory-collapse" aria-expanded="true" @onclick="changeStateManufactory">
                     <i class="bi-gear"></i> Manufactory
                 </a>
-                <div class="collapse show" id="manufactory-collapse" style="padding-left: 15px">
+                <div :class="'collapse ' + manufactoryShow" id="manufactory-collapse" style="padding-left: 15px">
                     <ul class="m-0 p-0" style="list-style-type: none">
                         <li class="nav-item">
                             <inertia-link href="/departments" class="nav-link text-white" aria-current="page">
@@ -69,7 +88,7 @@ const logout = () => {
                    data-bs-target="#system-collapse" aria-expanded="true">
                     <i class="bi-device-ssd"></i> System
                 </a>
-                <div class="collapse show" id="system-collapse" style="padding-left: 15px">
+                <div :class="'collapse ' + systemShow" id="system-collapse" style="padding-left: 15px">
                     <ul class="m-0 p-0" style="list-style-type: none">
                         <li class="nav-item">
                             <inertia-link href="/users" class="nav-link text-white" aria-current="page">

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import Navigation from "../layout/Navigation.vue";
-import {ref} from 'vue';
+import {onMounted, ref} from 'vue';
+import Echo from "laravel-echo";
 
 const date = ref(new Date().toLocaleTimeString() + "<br>" + new Date().toLocaleDateString() as string);
 
@@ -11,8 +12,15 @@ defineProps<{
 setInterval(() => {
     time()
 }, 1000)
-
 const time = () => date.value = new Date().toLocaleTimeString() + "<br>" + new Date().toLocaleDateString();
+
+onMounted(() => {
+    // Echo.channel('test')
+    //     .listen('message', (event: any) => {
+    //         console.log('Log created:', event.log);
+    //         // Możesz tutaj dodać kod, który wyświetli powiadomienie użytkownikom
+    //     });
+})
 
 </script>
 

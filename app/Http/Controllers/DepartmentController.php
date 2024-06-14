@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\TestEvent;
 use App\Http\Requests\DepartmentRequest;
 use App\Models\Department;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -43,6 +44,11 @@ class DepartmentController extends Controller
      */
     public function store(DepartmentRequest $request)
     {
+        Gate::authorize('create', Department::class);
+
+        event(new TestEvent());
+//        broadcast(new TestEvent())->toOthers();
+
         Department::create($request->validated());
         return redirect()->route("departments.index");
     }
@@ -52,6 +58,7 @@ class DepartmentController extends Controller
      */
     public function update(DepartmentRequest $request, Department $department)
     {
+        Gate::authorize('update', Department::class);
         $department->update($request->validated());
         return redirect()->route("departments.index");
     }
