@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Events\NewLogEvent;
 use App\Traits\Loggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $operation
@@ -34,6 +35,16 @@ class Log extends Model
     public $timestamps = false;
 
     public $guarded = [];
+
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::created(function ($model) {
+            $log = Log::with(["action", "user"])->where("id", "=", $model->id)->first()->makeHidden(["action_id", "user_id"]);
+            broadcast(new NewLogEvent($log))->toOthers();
+        });
+    }
 
     public function user()
     {

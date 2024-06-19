@@ -11,7 +11,7 @@ import 'bootstrap/dist/js/bootstrap.min.js';
 
 import "./styles/app.css";
 
-import './bootstrap';
+import {connectToLogs, initializeEcho} from "@/echo";
 
 createInertiaApp({
     resolve: name => {
@@ -20,12 +20,16 @@ createInertiaApp({
         return pages[`./pages/${name}.vue`]
     },
     setup({el, App, props, plugin}) {
-        createApp({render: () => h(App, props)})
+        const app = createApp({render: () => h(App, props)})
             .use(plugin)
             .use(Toast)
             .component('inertia-head', Head)
-            .component('inertia-link', Link)
-            .mount(el);
+            .component('inertia-link', Link);
+
+        initializeEcho();
+        connectToLogs();
+
+        app.mount(el);
     },
     progress: {
         color: '#0d6efd',

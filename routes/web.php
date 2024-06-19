@@ -19,6 +19,9 @@ use App\Models\Material;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+Broadcast::routes(['middleware' => ['web']]);
+
+
 Route::controller(AuthController::class)->group(function () {
     Route::get("/login", "login")->name('login')->middleware(RedirectToHomeIfLogin::class);
     Route::post("/login", "authenticate")->name('authenticate')->middleware(RedirectToHomeIfLogin::class);

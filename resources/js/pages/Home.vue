@@ -3,6 +3,8 @@ import BasePage from "../components/pages/BasePage.vue";
 import {usePage} from "@inertiajs/vue3";
 import {User} from "@/models/user";
 import StandardBsCard from "../components/cards/StandardCard.vue";
+import {onMounted} from "vue";
+import {connectToLogs, getEcho, initializeEcho} from "@/echo";
 
 const page = usePage();
 
@@ -17,7 +19,10 @@ defineProps<{
     products: number,
     users: number,
     logs: number,
-}>()
+}>();
+
+onMounted(() => {
+})
 </script>
 
 <template>
