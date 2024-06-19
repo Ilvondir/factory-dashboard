@@ -1,8 +1,10 @@
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 import {Log} from "@/models/log";
+import {useToast} from "vue-toastification";
 
 let echoInstance: any = null;
+const toast = useToast();
 
 export function initializeEcho() {
     // @ts-ignore
@@ -29,8 +31,9 @@ export function connectToLogs() {
 
         echoInstance.private('logs')
             .listen('.NewLog', (e: Log) => {
-                console.log(e);
-            })
+                toast.success("New log from socket!");
+            });
+
 
     }
 
