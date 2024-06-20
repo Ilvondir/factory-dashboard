@@ -3,7 +3,6 @@ import BasePage from "@/components/pages/BasePage.vue";
 import {InputUser, User} from "../../models/user";
 import {onMounted, ref} from "vue";
 import {router} from "@inertiajs/vue3";
-import {useToast} from "vue-toastification";
 import {Role} from "@/models/role";
 import {Pagination} from "@/models/pagination";
 import Paginator from "@/components/layout/Paginator.vue";
@@ -13,8 +12,6 @@ const userToCreate = ref(new InputUser() as InputUser);
 const localErrors = ref({} as InputUser);
 const userToUpdate = ref(new InputUser() as InputUser);
 const idToUpdate = ref(0 as number);
-
-const toast = useToast();
 
 const props = defineProps<{
     users: Pagination<User>,
@@ -28,10 +25,7 @@ const props = defineProps<{
 
 const handleDelete = () => {
     router.delete(`/users/${userToDelete.value.id}`, {
-        preserveScroll: true,
-        onSuccess: () => toast.error(`Successfully ${userToDelete.value.first_name} ${userToDelete.value.last_name} deleted!`, {
-            icon: false
-        })
+        preserveScroll: true
     })
 }
 
@@ -41,10 +35,6 @@ const handleCreate = () => {
         onSuccess: () => {
             const closeButton = document.getElementById("closeCreateModal");
             if (closeButton) closeButton.click();
-
-            toast.success(`Successfully ${userToCreate.value.first_name} ${userToCreate.value.last_name} created!`, {
-                icon: false,
-            });
 
             localErrors.value = {} as InputUser;
             userToCreate.value = {} as InputUser;
@@ -65,10 +55,6 @@ const handleUpdate = () => {
         onSuccess: () => {
             const closeButton = document.getElementById("closeUpdateModal");
             if (closeButton) closeButton.click();
-
-            toast.info(`Successfully ${userToUpdate.value.first_name} ${userToUpdate.value.last_name} updated!`, {
-                icon: false,
-            });
 
             localErrors.value = {} as InputUser;
         },
@@ -314,7 +300,7 @@ onMounted(() => {
                                     <label for="role" class="form-label">Role:</label>
                                     <select
                                         class="form-select" id="role" required
-                                        @change="(event) => userToCreate.role_id = event.target ? event.target.selectedOptions[0].value : 0"
+                                        @change="(event) => userToUpdate.role_id = event.target ? event.target.selectedOptions[0].value : 0"
                                     >
                                         <option value="-1" disabled>Select role</option>
                                         <option v-for="r in roles" :value="r.id"

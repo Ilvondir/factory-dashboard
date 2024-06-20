@@ -4,9 +4,6 @@ import {Department, InputDepartment} from "@/models/department";
 import BasePage from "@/components/pages/BasePage.vue";
 import {ref} from "vue";
 import {router} from "@inertiajs/vue3";
-import {useToast} from "vue-toastification";
-
-const toast = useToast();
 
 const departmentToDelete = ref({} as Department);
 const departmentToUpdate = ref(new InputDepartment() as InputDepartment);
@@ -25,12 +22,7 @@ const props = defineProps<{
 
 const handleDelete = () => {
     router.delete(`departments/${departmentToDelete.value.id}`, {
-        preserveScroll: true,
-        onSuccess: () => {
-            toast.error(`Successfully ${departmentToDelete.value.name} deleted!`, {
-                icon: false
-            });
-        }
+        preserveScroll: true
     });
 }
 
@@ -43,10 +35,6 @@ const handleUpdate = () => {
                 closeButton.click();
             }
             localErrors.value = {} as InputDepartment;
-
-            toast.info(`Successfully ${departmentToUpdate.value.name} updated!`, {
-                icon: false
-            });
         },
         onError: () => localErrors.value = props.errors,
     });
@@ -60,10 +48,6 @@ const handleCreate = () => {
             if (closeButton) {
                 closeButton.click();
             }
-
-            toast.success(`Successfully ${departmentToCreate.value.name} created!`, {
-                icon: false
-            });
 
             departmentToCreate.value = new InputDepartment();
             localErrors.value = {} as InputDepartment;

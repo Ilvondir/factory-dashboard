@@ -5,9 +5,7 @@ import {onMounted, ref} from "vue";
 import {router} from "@inertiajs/vue3";
 import {Pagination} from "@/models/pagination";
 import Paginator from "@/components/layout/Paginator.vue";
-import {useToast} from "vue-toastification";
 
-const toast = useToast();
 
 const materialToDelete = ref({} as Material);
 const materialToCreate = ref(new InputMaterial() as InputMaterial);
@@ -26,12 +24,7 @@ const props = defineProps<{
 
 const handleDelete = () => {
     router.delete(`/materials/${materialToDelete.value.id}`, {
-        preserveScroll: true,
-        onSuccess: () => {
-            toast.error(`Successfully ${materialToDelete.value.name} deleted!`, {
-                icon: false
-            });
-        }
+        preserveScroll: true
     });
 }
 
@@ -42,10 +35,6 @@ const handleCreate = () => {
             localErrors.value = {};
             const closeButton = document.getElementById("closeCreateModal");
             if (closeButton) closeButton.click();
-
-            toast.success(`Successfully ${materialToCreate.value.name} created!`, {
-                icon: false
-            });
 
             materialToCreate.value = new InputMaterial();
         },
@@ -65,9 +54,6 @@ const handleUpdate = () => {
             const closeButton = document.getElementById("closeUpdateModal");
             if (closeButton) closeButton.click();
 
-            toast.info(`Successfully ${materialToEdit.value.name} updated!`, {
-                icon: false
-            });
         },
         onError: () => {
             localErrors.value = props.errors
@@ -82,9 +68,6 @@ const handleAddAmount = () => {
             const closeButton = document.getElementById("closeAddAmountModal");
             if (closeButton) closeButton.click();
 
-            toast.warning(`Successfully ${value.value} item of ${materialToEdit.value.name} added!`, {
-                icon: false
-            });
         }
     })
 }
@@ -95,10 +78,7 @@ const handleRemoveAmount = () => {
         onSuccess: () => {
             const closeButton = document.getElementById("closeRemoveAmountModal");
             if (closeButton) closeButton.click();
-
-            toast.warning(`Successfully ${value.value} item of ${materialToEdit.value.name} removed!`, {
-                icon: false
-            });
+            
         }
     })
 }

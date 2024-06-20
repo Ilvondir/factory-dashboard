@@ -41,7 +41,8 @@ class Log extends Model
     {
         parent::boot();
         static::created(function ($model) {
-            $log = Log::with(["action", "user"])->where("id", "=", $model->id)->first()->makeHidden(["action_id", "user_id"]);
+            $log = Log::with(["action", "user.role"])->where("id", "=", $model->id)->first()->makeHidden(["action_id", "user_id"]);
+            $log->user->makeHidden("role_id");
             broadcast(new NewLogEvent($log))->toOthers();
         });
     }
