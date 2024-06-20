@@ -2,7 +2,9 @@
 import BasePage from "../components/pages/BasePage.vue";
 import {usePage} from "@inertiajs/vue3";
 import {User} from "@/models/user";
-import StandardBsCard from "../components/cards/StandardBsCard.vue";
+import StandardBsCard from "../components/cards/StandardCard.vue";
+import {onMounted} from "vue";
+import {connectToLogs, getEcho, initializeEcho} from "@/echo";
 
 const page = usePage();
 
@@ -17,12 +19,15 @@ defineProps<{
     products: number,
     users: number,
     logs: number,
-}>()
+}>();
+
+onMounted(() => {
+})
 </script>
 
 <template>
     <inertia-head>
-        <title>Home</title>
+        <title>Factory | Home</title>
     </inertia-head>
 
     <BasePage title="Home">
@@ -37,7 +42,7 @@ defineProps<{
         <div class="row d-flex justify-content-center">
 
             <standard-bs-card title="Departments" :link="'/departments'"
-                              :body="'The factory is divided into ' + departments + ' departments.'"></standard-bs-card>
+                              :body="'The manufactory is divided into ' + departments + ' departments.'"></standard-bs-card>
 
             <standard-bs-card title="Positions" link="/positions"
                               :body="'There are ' + positions + ' positions created in ' + departments + ' departments.'"></standard-bs-card>

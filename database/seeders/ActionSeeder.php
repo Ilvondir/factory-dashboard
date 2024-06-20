@@ -17,6 +17,7 @@ class ActionSeeder extends Seeder
             ["name" => "Create", "color" => "#198754"],
             ["name" => "Update", "color" => "#0D6EFD"],
             ["name" => "Delete", "color" => "#DC3545"],
+            ["name" => "Change amount", "color" => "#FFC107"],
         ]);
     }
 }

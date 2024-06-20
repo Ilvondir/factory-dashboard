@@ -7,3 +7,10 @@ export interface User {
     email: string,
     role: Role
 }
+
+export class InputUser {
+    first_name: string = ""
+    last_name: string = ""
+    email: string = ""
+    role_id: number = 0
+}

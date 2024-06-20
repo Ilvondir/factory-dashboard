@@ -1,4 +1,4 @@
-.btn-primary, .btn-danger, .btn-success {
+.btn-primary, .btn-danger, .btn-success, .btn-warning {
     transition: 300ms;
 }
 
@@ -12,4 +12,12 @@
 
 .btn-success:hover {
     box-shadow: 0 0 15px #19875490;
+}
+
+.btn-warning:hover {
+    box-shadow: 0 0 15px #FFC10790;
+}
+
+.odometer-value {
+    font-family: inherit;
 }

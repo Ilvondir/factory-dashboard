@@ -22,6 +22,8 @@ class LogController extends Controller
 
     public function downloadJSON()
     {
+        \Gate::authorize("downloadLogs");
+
         $logs = Log::with(["action", "user.role"])->orderByDesc("id")->get();
         $logs->each(function ($log) {
             $log->makeHidden(['action_id', 'user_id']);

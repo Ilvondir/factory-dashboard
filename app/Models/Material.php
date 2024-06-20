@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Traits\Loggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon;
 
 /**
  * 
@@ -22,14 +24,29 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Material whereName($value)
  * @property int $quantity
  * @method static \Illuminate\Database\Eloquent\Builder|Material whereQuantity($value)
+ * @property int $amount
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|Material whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Material whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Material whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 class Material extends Model
 {
-    use HasFactory;
+    use HasFactory, Loggable;
 
-    public $timestamps = false;
     public $guarded = [];
+
+    public function getCreatedAtAttribute($date)
+    {
+        return Carbon\Carbon::parse($date)->format("d.m.Y, H:i:s");
+    }
+
+    public function getUpdatedAtAttribute($date)
+    {
+        return Carbon\Carbon::parse($date)->format("d.m.Y, H:i:s");
+    }
 
     public function products()
     {

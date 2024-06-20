@@ -3,12 +3,13 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Traits\Loggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $first_name
@@ -35,7 +36,7 @@ use Illuminate\Notifications\Notifiable;
  */
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, Loggable;
 
     public $timestamps = false;
 
@@ -54,6 +55,20 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::created(function ($model) {
+            $model->log("User " . $model->first_name . " " . $model->last_name . " (" . $model->role->name . ") created.", 1);
+        });
+        static::updated(function ($model) {
+            $model->log("User " . $model->first_name . " " . $model->last_name . " (" . $model->role->name . ") updated.", 2);
+        });
+        static::deleted(function ($model) {
+            $model->log("User " . $model->first_name . " " . $model->last_name . " (" . $model->role->name . ") deleted.", 3);
+        });
+    }
 
     public function role()
     {

@@ -13,8 +13,8 @@ return new class extends Migration {
         Schema::create('materials', function (Blueprint $table) {
             $table->id();
             $table->string("name");
-            $table->integer("quantity");
-            $table->date("added");
+            $table->integer("amount");
+            $table->timestamps();
         });
     }
 

@@ -59,11 +59,12 @@ const handleUpdate = () => {
     router.put(`/workers/${currentWorker.value.id}`, workerToEdit.value, {
         preserveScroll: true,
         onSuccess: () => {
-            const closeButton = document.querySelector("#closeUpdateModal");
+            const closeButton = document.getElementById("closeUpdateModal");
             if (closeButton) closeButton.click();
 
-            const offcanvasCloseButton = document.getElementById("closeOffcanvas");
-            if (offcanvasCloseButton) offcanvasCloseButton.click();
+            for (let i = 0; i < props.workers.data.length; i++) {
+                if (props.workers.data[i].id === currentWorker.value.id) currentWorker.value = props.workers.data[i];
+            }
         },
         onError: () => {
             localErrors.value = props.errors;
@@ -79,7 +80,7 @@ onMounted(() => {
 <template>
 
     <inertia-head>
-        <title>Workers</title>
+        <title>Factory | Workers</title>
     </inertia-head>
 
     <BasePage title="Workers">
@@ -110,26 +111,28 @@ onMounted(() => {
             </button>
         </div>
 
-        <table class="table table-hover table-striped">
-            <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th>Name</th>
-                <th>Position</th>
-                <th>Hired</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="(item, index) in workers.data" data-bs-toggle="offcanvas" data-bs-target="#workerOffcanvas"
-                aria-controls="offcanvasRight"
-                @click="() => {currentWorker = item; isWorkerSelected = true; indexOfCurrentWorker = index}">
-                <th>{{ index + 1 + 10 * (workers.current_page - 1) }}</th>
-                <td>{{ item.first_name + " " + item.last_name }}</td>
-                <td>{{ item.position.name }}</td>
-                <td>{{ item.hired }}</td>
-            </tr>
-            </tbody>
-        </table>
+        <div class="overflow-x-scroll">
+            <table class="table table-hover table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th>Name</th>
+                    <th>Position</th>
+                    <th>Hired</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="(item, index) in workers.data" data-bs-toggle="offcanvas" data-bs-target="#workerOffcanvas"
+                    aria-controls="offcanvasRight"
+                    @click="() => {currentWorker = item; isWorkerSelected = true; indexOfCurrentWorker = index}">
+                    <th>{{ index + 1 + 10 * (workers.current_page - 1) }}</th>
+                    <td>{{ item.first_name + " " + item.last_name }}</td>
+                    <td>{{ item.position.name }}</td>
+                    <td>{{ item.hired }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
 
         <Paginator :items="workers"/>
 
@@ -154,14 +157,24 @@ onMounted(() => {
                 <li class="list-group-item"><strong>Address:</strong>: {{ currentWorker.address }}</li>
             </ul>
 
-            <ul class="list-group" v-if="isWorkerSelected">
-                <li class="list-group-item fw-bold">Job</li>
-                <li class="list-group-item"><strong>Department:</strong> {{ currentWorker.position.department.name }}
+            <ul class="list-group">
+                <li class="list-group-item fw-bold">
+                    Job
                 </li>
-                <li class="list-group-item"><strong>Position:</strong> {{ currentWorker.position.name }}</li>
-                <li class="list-group-item"><strong>Salary:</strong> {{ currentWorker.salary }} per month</li>
-                <li class="list-group-item"><strong>Hired:</strong> {{ currentWorker.hired }}</li>
-                <li class="list-group-item"><strong>Responsibilities:</strong>
+                <li class="list-group-item" v-if="isWorkerSelected">
+                    <strong>Department:</strong> {{ currentWorker.position.department.name }}
+                </li>
+                <li class="list-group-item" v-if="isWorkerSelected">
+                    <strong>Position:</strong> {{ currentWorker.position.name }}
+                </li>
+                <li class="list-group-item">
+                    <strong>Salary:</strong> {{ currentWorker.salary }} per month
+                </li>
+                <li class="list-group-item">
+                    <strong>Hired:</strong> {{ currentWorker.hired }}
+                </li>
+                <li class="list-group-item" v-if="isWorkerSelected">
+                    <strong>Responsibilities:</strong>
                     {{ currentWorker.position.responsibilities }}
                 </li>
             </ul>
