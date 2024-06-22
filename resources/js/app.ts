@@ -1,6 +1,8 @@
 import {createApp, h, DefineComponent} from 'vue';
 import {createInertiaApp, Head, Link} from '@inertiajs/vue3';
 
+import "ua-parser-js";
+
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
 

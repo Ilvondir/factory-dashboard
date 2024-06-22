@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Department;
 use App\Models\Material;
 use App\Models\Position;
+use App\Models\Session;
 use App\Models\User;
 use App\Models\Worker;
 use App\Policies\DepartmentPolicy;
@@ -40,5 +41,9 @@ class AppServiceProvider extends ServiceProvider
 
         Gate::policy(Material::class, MaterialPolicy::class);
         Gate::policy(User::class, UserPolicy::class);
+
+        Gate::define('destroySession', function (User $user, Session $session) {
+            return $user->id == $session->user_id && $session->id !== session()->getId();
+        });
     }
 }
