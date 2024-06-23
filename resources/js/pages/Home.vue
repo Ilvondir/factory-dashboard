@@ -31,11 +31,16 @@ onMounted(() => {
     </inertia-head>
 
     <BasePage title="Home">
-        <div class="p-5 text-center bg-body-tertiary rounded-3 jumbotron">
+        <div class="p-5  text-center bg-body-tertiary rounded-3 jumbotron">
             <h1 class="text-body-emphasis">Welcome, {{ user.first_name + " " + user.last_name }}!</h1>
             <p class="col-lg-9 mx-auto fs-5 text-muted">
                 This is a factory management panel. Within this system, you can manage company resources, view
                 application users and system change logs.
+            </p>
+            <p>
+                <inertia-link href="/profile" class="btn btn-primary mt-2">
+                    Check my profile
+                </inertia-link>
             </p>
         </div>
 

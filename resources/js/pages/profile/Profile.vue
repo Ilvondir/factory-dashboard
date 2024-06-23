@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import BasePage from "@/components/pages/BasePage.vue";
-import {User} from "@/models/user";
+import {InputPasswordChange, User} from "@/models/user";
 import {onMounted, ref} from "vue";
 import {Session, UAParsed} from "@/models/session";
 // @ts-ignore
@@ -10,17 +10,21 @@ import {useToast} from "vue-toastification";
 
 const uaInfos = ref([] as UAParsed[]);
 const sessionToDelete = ref({} as Session);
+const passwordChangeData = ref(new InputPasswordChange() as InputPasswordChange);
 
 const toast = useToast();
 
 const props = defineProps<{
     user: User,
     sessions: Session[],
-    canDeleteSessions: boolean[]
+    canDeleteSessions: boolean[],
+    actionsNumber: number,
+    errors: InputPasswordChange
 }>();
 
 const handleDelete = () => {
     router.delete(`/sessions/${sessionToDelete.value.id}`, {
+        preserveScroll: true,
         onSuccess: () => {
             toast.error("Session deleted successfully!", {icon: false});
         }
@@ -34,7 +38,22 @@ const handleDeleteAllSessions = () => {
         if (props.canDeleteSessions[index]) sessions_id.push(session.id)
     });
 
-    router.post('/sessions', {sessions_id: sessions_id});
+    router.post('/sessions', {sessions_id: sessions_id}, {
+        preserveScroll: true,
+        onSuccess: () => {
+            toast.error("All other sessions deleted successfully!", {icon: false});
+        }
+    });
+}
+
+const handleChangePassword = () => {
+    router.patch(`/profile/${props.user.id}/password`, passwordChangeData.value, {
+        preserveScroll: true,
+        onSuccess: () => {
+            passwordChangeData.value = new InputPasswordChange();
+            toast.info("Password changed successfully!")
+        }
+    });
 }
 
 onMounted(() => {
@@ -57,6 +76,89 @@ onMounted(() => {
     </inertia-head>
 
     <BasePage title="Profile">
+
+
+        <div class="row">
+
+            <div class="col-lg-3 col-12 text-center">
+                <i class="bi bi-person-circle"></i>
+            </div>
+
+            <div class="col-lg-9 col-12 d-flex justify-content-center align-items-center">
+
+                <div class="mh-100">
+                    <p class="display-3 text-center">
+                        {{ user.first_name + " " + user.last_name }}
+                    </p>
+                    <p class="display-6 text-center">
+                        {{ user.role.name }}
+                    </p>
+
+                    <p class="mt-5 text-center display-6 mb-5 mb-lg-0" v-if="user.role.id === 1">
+                        {{ actionsNumber }} actions performed
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <h4 class="mt-4">Change password</h4>
+
+        <div class="row mb-5">
+
+            <form @submit.prevent="handleChangePassword">
+                <div class="card col-lg-6 col-12 offset-lg-3" style="padding: 0">
+                    <div class="card-header">
+                        Change your password
+                    </div>
+                    <div class="card-body">
+
+
+                        <div class="mb-3">
+                            <label for="old_password" class="form-label">Old password:</label>
+                            <input type="password" class="form-control" id="old_password"
+                                   placeholder="Enter old password"
+                                   required v-model="passwordChangeData.old_password">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">New password:</label>
+                            <input type="password" min="8" class="form-control" id="password"
+                                   placeholder="Enter new password" required
+                                   v-model="passwordChangeData.password">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password_confirmation" class="form-label">Confirm password:</label>
+                            <input type="password" class="form-control" id="password_confirmation" required
+                                   placeholder="Confirm new password"
+                                   v-model="passwordChangeData.password_confirmation">
+                        </div>
+
+                        <div v-if="Object.keys(errors).length > 0"
+                             class="alert-danger alert">
+                            <ul class="m-0">
+                                <li v-for="er in errors">
+                                    {{ er }}
+                                </li>
+                            </ul>
+                        </div>
+
+
+                    </div>
+
+                    <div class="card-footer text-end">
+                        <button class="btn btn-primary">Change password</button>
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
 
         <h4>Sessions</h4>
 
@@ -154,6 +256,11 @@ onMounted(() => {
 .bi-pc-display-horizontal, .bi-phone {
     color: rgb(var(--bs-primary-rgb));
     font-size: 250%;
+}
+
+.bi-person-circle {
+    color: rgb(var(--bs-primary-rgb));
+    font-size: 1300%;
 }
 
 p {

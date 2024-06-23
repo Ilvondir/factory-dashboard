@@ -9,7 +9,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $first_name
@@ -63,9 +63,6 @@ class User extends Authenticatable
         parent::boot();
         static::created(function ($model) {
             $model->log("User " . $model->first_name . " " . $model->last_name . " (" . $model->role->name . ") created.", 1);
-        });
-        static::updated(function ($model) {
-            $model->log("User " . $model->first_name . " " . $model->last_name . " (" . $model->role->name . ") updated.", 2);
         });
         static::deleted(function ($model) {
             $model->log("User " . $model->first_name . " " . $model->last_name . " (" . $model->role->name . ") deleted.", 3);
