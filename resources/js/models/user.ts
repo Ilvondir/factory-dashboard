@@ -14,3 +14,10 @@ export class InputUser {
     email: string = ""
     role_id: number = 0
 }
+
+
+export class InputPasswordChange {
+    old_password: string = ""
+    password: string = ""
+    password_confirmation: string = ""
+}

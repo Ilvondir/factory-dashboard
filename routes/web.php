@@ -5,6 +5,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\PositionController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WorkerController;
 use App\Http\Middleware\RedirectToHomeIfLogin;
@@ -88,6 +89,14 @@ Route::middleware(RedirectToLoginIfNotLogin::class)->group(function () {
         Route::put("/users/{user}", "update")->name("users.update");
         Route::delete("/users/{user}", "destroy")->name("users.destroy");
     });
+
+    Route::controller(ProfileController::class)->group(function () {
+        Route::get("/profile", "show")->name("profile");
+        Route::delete("/sessions/{session}", "destroySession")->name("sessions.destroy");
+        Route::post("/sessions", "destroyOther")->name("sessions.destroyOther");
+        Route::patch("/profile/{user}/password", "changePassword")->name("user.passwordChange");
+    });
+
 });
 
 Route::get("/403", function () {

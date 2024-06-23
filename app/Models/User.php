@@ -32,6 +32,8 @@ use Illuminate\Notifications\Notifiable;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereLastName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User wherePassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRoleId($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Session> $sessions
+ * @property-read int|null $sessions_count
  * @mixin \Eloquent
  */
 class User extends Authenticatable
@@ -62,9 +64,6 @@ class User extends Authenticatable
         static::created(function ($model) {
             $model->log("User " . $model->first_name . " " . $model->last_name . " (" . $model->role->name . ") created.", 1);
         });
-        static::updated(function ($model) {
-            $model->log("User " . $model->first_name . " " . $model->last_name . " (" . $model->role->name . ") updated.", 2);
-        });
         static::deleted(function ($model) {
             $model->log("User " . $model->first_name . " " . $model->last_name . " (" . $model->role->name . ") deleted.", 3);
         });
@@ -78,5 +77,10 @@ class User extends Authenticatable
     public function logs()
     {
         return $this->hasMany(Log::class);
+    }
+
+    public function sessions()
+    {
+        return $this->hasMany(Session::class);
     }
 }

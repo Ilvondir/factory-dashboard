@@ -57,6 +57,7 @@ class UserController extends Controller
         \Gate::authorize('update', $user);
 
         $user->update($request->validated());
+        $user->log("User " . $user->first_name . " " . $user->last_name . " (" . $user->role->name . ") updated.", 2);
 
         return back();
     }

@@ -12,7 +12,7 @@ class AuthController extends Controller
 {
     public function login()
     {
-        return Inertia::render("LoginPanel");
+        return Inertia::render("auth/LoginPanel");
     }
 
     public function authenticate(LoginRequest $request)
