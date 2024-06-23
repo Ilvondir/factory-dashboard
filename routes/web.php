@@ -93,6 +93,7 @@ Route::middleware(RedirectToLoginIfNotLogin::class)->group(function () {
     Route::controller(ProfileController::class)->group(function () {
         Route::get("/profile", "show")->name("profile");
         Route::delete("/sessions/{session}", "destroySession")->name("sessions.destroy");
+        Route::post("/sessions", "destroyOther")->name("sessions.destroyOther");
     });
 
 });

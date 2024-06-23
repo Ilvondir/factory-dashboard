@@ -27,6 +27,16 @@ const handleDelete = () => {
     })
 }
 
+const handleDeleteAllSessions = () => {
+    const sessions_id: string[] = [];
+
+    props.sessions.forEach((session: Session, index: number) => {
+        if (props.canDeleteSessions[index]) sessions_id.push(session.id)
+    });
+
+    router.post('/sessions', {sessions_id: sessions_id});
+}
+
 onMounted(() => {
     console.log(props);
 
@@ -50,12 +60,20 @@ onMounted(() => {
 
         <h4>Sessions</h4>
 
+        <div class="d-flex justify-content-end">
+            <button class="btn btn-danger mb-2"
+                    data-bs-toggle="modal" data-bs-target="#deleteAllModal">
+                <i class="bi bi-trash3-fill text-white"></i>
+                Delete all other sessions
+            </button>
+        </div>
+
         <div class="overflow-x-scroll">
             <ul class="list-group">
                 <li class="list-group-item" v-for="(session, index) in sessions">
                     <div class="d-flex align-items-center row">
 
-                        <div class="col-1">
+                        <div class="col-1 text-center">
                             <i class="bi bi-pc-display-horizontal" v-if="!session.user_agent.includes('Mobile')"></i>
                             <i class="bi bi-phone" v-else></i>
                         </div>
@@ -72,12 +90,12 @@ onMounted(() => {
                             </p>
                         </div>
 
-                        <div class="col-1" v-if="canDeleteSessions[index]">
+                        <div class="col-1">
 
-                            <button class="btn btn-danger"
+                            <button class="btn btn-danger" v-if="canDeleteSessions[index]"
                                     @click="sessionToDelete = session"
                                     data-bs-toggle="modal" data-bs-target="#deleteModal">
-                                <i class="bi bi-trash text-white" style="font-size: 120%"></i>
+                                <i class="bi bi-trash" style="font-size: 110%"></i>
                             </button>
 
                         </div>
@@ -108,10 +126,32 @@ onMounted(() => {
         </div>
     </div>
 
+
+    <div class="modal fade" id="deleteAllModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Confirm decision</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete all other session?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" @click="handleDeleteAllSessions" class="btn btn-danger"
+                            data-bs-dismiss="modal">
+                        Delete sessions
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </template>
 
 <style scoped>
-.bi {
+.bi-pc-display-horizontal, .bi-phone {
     color: rgb(var(--bs-primary-rgb));
     font-size: 250%;
 }
