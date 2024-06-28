@@ -13,7 +13,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with(["department"])->get();
+        $products = Product::with(["department", 'materials'])->get();
 
         return Inertia::render('products/Products', [
             'products' => $products
