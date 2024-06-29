@@ -2,11 +2,14 @@
 import BasePage from "@/components/pages/BasePage.vue";
 import {Product} from "@/models/product";
 import {onMounted, ref} from "vue";
+import {InputWorker} from "@/models/worker";
+import {Pagination} from "@/models/pagination";
+import Paginator from "@/components/layout/Paginator.vue";
 
 const selectedProduct = ref({} as Product);
 
 const props = defineProps<{
-    products: Product[]
+    products: Pagination<Product>
 }>();
 
 onMounted(() => {
@@ -25,7 +28,7 @@ onMounted(() => {
 
                 <div class="row">
 
-                    <div class="col-6 mb-3" v-for="p in products">
+                    <div class="col-6 mb-3" v-for="p in products.data">
                         <div class="card" style="cursor: pointer" @click="selectedProduct = p">
                             <div class="card-body">
                                 <h5 class="card-title">{{ p.name }}</h5>
@@ -37,13 +40,15 @@ onMounted(() => {
                     </div>
                 </div>
 
+                <Paginator :items="products"/>
+
 
             </div>
 
 
             <div class="col-12 col-lg-6">
 
-                <div class="card">
+                <div class="card h-100">
 
                     <div class="card-header">
                         Product
@@ -67,7 +72,23 @@ onMounted(() => {
 
                             </ul>
 
+                            <div class="text-end w-100 mt-3">
+                                <button class="btn btn-primary me-1" v-if="true"
+                                        data-bs-toggle="modal" data-bs-target="#updateModal"
+                                        @click="() => {}">
+                                    <i class="bi bi-pen"></i> Edit
+                                </button>
+
+                                <button class="btn btn-danger ms-1" v-if="true"
+                                        data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                    <i class="bi bi-trash"></i> Delete
+                                </button>
+                            </div>
                         </template>
+
+                        <p v-else>
+                            Select product from list.
+                        </p>
 
                     </div>
 
