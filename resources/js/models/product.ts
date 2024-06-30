@@ -8,3 +8,10 @@ export interface Product {
     department: Department,
     materials: Material[]
 }
+
+export class InputProduct {
+    name: string = ""
+    price: number = 0
+    department_id: number = 0
+    materials_id: number[] = []
+}

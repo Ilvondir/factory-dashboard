@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProductStoreRequest;
+use App\Models\Department;
+use App\Models\Material;
 use App\Models\Product;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -14,42 +18,43 @@ class ProductController extends Controller
     public function index()
     {
         $products = Product::with(["department", 'materials'])->paginate(6);
+        $canDeleteProducts = [];
+        $canUpdateProducts = [];
+
+        foreach ($products as $p) {
+            $canDeleteProducts[] = \Auth::user()->can('delete', $p);
+            $canUpdateProducts[] = \Auth::user()->can('update', $p);
+        }
+
 
         return Inertia::render('products/Products', [
-            'products' => $products
+            'products' => $products,
+            'canCreateProducts' => \Auth::user()->can("create", Product::class),
+            'canDeleteProducts' => $canDeleteProducts,
+            'canUpdateProducts' => $canUpdateProducts,
+            'departments' => Department::get(),
+            'materials' => Material::get()
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ProductStoreRequest $request)
     {
-        //
-    }
+        \Gate::authorize('create', Product::class);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+        $data = $request->validated();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+        $product = Product::create([
+            "name" => $data['name'],
+            "price" => $data['price'],
+            "department_id" => $data['department_id'],
+        ]);
+        $product->materials()->syncWithoutDetaching($data['materials_id']);
+
+        return back();
     }
 
     /**
@@ -62,9 +67,12 @@ class ProductController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     * @throws AuthorizationException
      */
-    public function destroy(string $id)
+    public function destroy(Product $product)
     {
-        //
+        \Gate::authorize('delete', $product);
+        Product::destroy($product->id);
+        return back();
     }
 }
