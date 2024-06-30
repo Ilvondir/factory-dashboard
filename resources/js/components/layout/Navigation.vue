@@ -87,7 +87,7 @@ onMounted(() => {
                             </inertia-link>
                         </li>
                         <li>
-                            <inertia-link href="#" class="nav-link text-white">
+                            <inertia-link href="/products" class="nav-link text-white">
                                 <i class="bi-file-bar-graph"></i> Products
                             </inertia-link>
                         </li>

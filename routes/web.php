@@ -5,6 +5,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\PositionController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WorkerController;
@@ -97,6 +98,9 @@ Route::middleware(RedirectToLoginIfNotLogin::class)->group(function () {
         Route::patch("/profile/{user}/password", "changePassword")->name("user.passwordChange");
     });
 
+    Route::controller(ProductController::class)->group(function () {
+        Route::get("/products", "index")->name("products.index");
+    });
 });
 
 Route::get("/403", function () {

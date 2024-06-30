@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $name
@@ -31,6 +31,21 @@ class Product extends Model
 
     public $timestamps = false;
     public $guarded = [];
+
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::created(function ($model) {
+            $model->log("Product " . $model->name . " created.", 1);
+        });
+        static::updated(function ($model) {
+            $model->log("Product " . $model->name . " updated.", 2);
+        });
+        static::deleted(function ($model) {
+            $model->log("Product " . $model->name . " deleted.", 3);
+        });
+    }
 
     public function department()
     {
