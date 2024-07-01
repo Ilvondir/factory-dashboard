@@ -14,7 +14,10 @@ const productToCreate = ref(new InputProduct());
 const options = ref([] as string[]);
 const selected = ref([] as string[]);
 const localErrors = ref({} as InputProduct);
-
+const productToEdit = ref({} as Product);
+const selectedProductOptions = ref([] as string[]);
+const materialsIdsToUpdate = ref([] as number[]);
+const departmentIdToUpdate = ref(0 as number);
 
 const props = defineProps<{
     products: Pagination<Product>,
@@ -35,6 +38,25 @@ const handleDelete = () => {
     });
 }
 
+const selectProduct = (p: Product) => {
+    selectedProduct.value = p;
+    productToEdit.value = {...p};
+    departmentIdToUpdate.value = p.department.id;
+
+    const tempTab: string[] = [];
+
+    for (let i = 0; i < selectedProduct.value.materials.length; i++) {
+        props.materials.forEach((m: Material) => {
+            if (m.id === selectedProduct.value.materials[i].id) {
+                tempTab.push(m.name);
+            }
+        });
+    }
+
+    selectedProductOptions.value = tempTab;
+    changeNamesToIdsUpdate();
+}
+
 const changeNamesToIds = () => {
     const tempTab: number[] = [];
 
@@ -47,6 +69,20 @@ const changeNamesToIds = () => {
     }
 
     productToCreate.value.materials_id = tempTab;
+}
+
+const changeNamesToIdsUpdate = () => {
+    const tempTab: number[] = [];
+
+    for (let i = 0; i < selectedProductOptions.value.length; i++) {
+        props.materials.forEach((m: Material) => {
+            if (m.name === selectedProductOptions.value[i]) {
+                tempTab.push(m.id);
+            }
+        });
+    }
+
+    materialsIdsToUpdate.value = tempTab;
 }
 
 const handleCreate = () => {
@@ -68,6 +104,30 @@ const handleCreate = () => {
 
             selected.value = [];
         }
+    });
+}
+
+
+const handleUpdate = () => {
+    router.put(`/products/${selectedProduct.value.id}`, {
+        name: productToEdit.value.name,
+        price: productToEdit.value.price,
+        department_id: departmentIdToUpdate.value,
+        materials_id: materialsIdsToUpdate.value
+    }, {
+        preserveScroll: true,
+        onError: () => {
+            localErrors.value = props.errors;
+            console.log(selectedProduct.value);
+        },
+        onSuccess: () => {
+            localErrors.value = {} as InputProduct;
+
+            const closeButton = document.getElementById("closeUpdateModal");
+            if (closeButton) closeButton.click();
+
+            selectedProduct.value = {} as Product;
+        }
     })
 }
 
@@ -76,7 +136,7 @@ onMounted(() => {
 
     props.materials.forEach((m: Material) => {
         options.value.push(m.name)
-    })
+    });
 })
 </script>
 
@@ -94,7 +154,7 @@ onMounted(() => {
                     <button class="btn btn-primary"
                             data-bs-toggle="modal"
                             data-bs-target="#createModal"
-                            @click="">
+                            @click="localErrors = {} as InputProduct">
                         <i class="bi bi-plus-lg"></i> Add new product
                     </button>
                 </div>
@@ -102,10 +162,13 @@ onMounted(() => {
                 <div class="row">
 
                     <div class="col-6 mb-3" v-for="p in products.data">
-                        <div class="card" style="cursor: pointer" @click="selectedProduct = p">
+                        <div class="card" style="cursor: pointer"
+                             @click="() => selectProduct(p)">
                             <div class="card-body">
                                 <h5 class="card-title">{{ p.name }}</h5>
-                                <h6 class="card-subtitle" style="opacity: 0.7">{{ p.department.name }}</h6>
+                                <h6 class="card-subtitle" style="color: rgba(13, 110, 253, 0.7)">
+                                    {{ p.department.name }}
+                                </h6>
                                 <p class="card-text mt-2">{{ p.price }} PLN</p>
                             </div>
                         </div>
@@ -114,7 +177,6 @@ onMounted(() => {
                 </div>
 
                 <Paginator :items="products"/>
-
 
             </div>
 
@@ -135,7 +197,7 @@ onMounted(() => {
 
                             <h5>{{ selectedProduct.price }} PLN</h5>
 
-                            <h5 class="mb-4">{{ selectedProduct.department.name }}</h5>
+                            <h5 class="mb-4 text-primary">{{ selectedProduct.department.name }}</h5>
 
                             <h6>Materials:</h6>
                             <ul class="list-group">
@@ -159,12 +221,12 @@ onMounted(() => {
                             <button class="btn btn-primary me-1"
                                     v-if="canUpdateProducts[products.data.indexOf(selectedProduct)]"
                                     data-bs-toggle="modal" data-bs-target="#updateModal"
-                                    @click="() => {}">
+                                    @click="localErrors = {} as InputProduct">
                                 <i class="bi bi-pen"></i> Edit
                             </button>
 
                             <button class="btn btn-danger ms-1"
-                                    v-if="canUpdateProducts[products.data.indexOf(selectedProduct)]"
+                                    v-if="canDeleteProducts[products.data.indexOf(selectedProduct)]"
                                     data-bs-toggle="modal" data-bs-target="#deleteModal">
                                 <i class="bi bi-trash"></i> Delete
                             </button>
@@ -270,10 +332,87 @@ onMounted(() => {
         </div>
     </div>
 
+    <div class="modal fade" id="updateModal" tabindex="-1" aria-hidden="true"
+         v-if="Object.keys(selectedProduct).length > 0">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Edit product</h1>
+                    <button type="button" class="btn-close" id="closeUpdateModal" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <form @submit.prevent="handleUpdate">
+                    <div class="modal-body">
+
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Name:</label>
+                            <input type="text" class="form-control" id="title" v-model="productToEdit.name"
+                                   placeholder="Product name" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="price" class="form-label">Price:</label>
+                            <input type="number" class="form-control" min="0" step="0.01" id="price"
+                                   v-model="productToEdit.price"
+                                   placeholder="Product price" required>
+                        </div>
+
+
+                        <div class="mb-3">
+                            <label for="department2" class="form-label">Department:</label>
+                            <select
+                                class="form-select" id="department2" required
+                                @change="(event) => departmentIdToUpdate = event.target ? event.target.selectedOptions[0].value : 0"
+                            >
+                                <option value="-1" disabled selected>Select department</option>
+                                <option v-for="d in departments" :value="d.id"
+                                        :selected="productToEdit.department.id === d.id"
+                                >
+                                    {{ d.name }}
+                                </option>
+                            </select>
+                        </div>
+
+
+                        <div class="mb-3" v-if="options.length > 0">
+                            <label for="materials" class="form-label">Materials:</label>
+                            <multiselect v-model="selectedProductOptions" :options="options"
+                                         :searchable="true" :multiple="true" :close-on-select="false"
+                                         placeholder="Select materials" id="materials"
+                                         @select="() => changeNamesToIdsUpdate()">
+                            </multiselect>
+                        </div>
+
+
+                        <div v-if="Object.keys(localErrors).length > 0"
+                             class="alert-danger alert">
+                            <ul class="m-0">
+                                <li v-for="er in localErrors">
+                                    {{ er }}
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">
+                            Update product
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 </template>
 
 <style>
-.multiselect__option--highlight, .multiselect__tag {
+.multiselect__tag {
     background: #0d6efd !important;
+}
+
+.multiselect__tag-icon::after {
+    color: white !important;
 }
 </style>

@@ -162,7 +162,7 @@ onMounted(() => {
 
         <h4>Sessions</h4>
 
-        <div class="d-flex justify-content-end">
+        <div class="d-flex justify-content-end" v-if="sessions.length > 1">
             <button class="btn btn-danger mb-2"
                     data-bs-toggle="modal" data-bs-target="#deleteAllModal">
                 <i class="bi bi-trash3-fill text-white"></i>

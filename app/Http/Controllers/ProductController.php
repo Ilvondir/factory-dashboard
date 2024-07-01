@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProductStoreRequest;
+use App\Http\Requests\ProductRequest;
 use App\Models\Department;
 use App\Models\Material;
 use App\Models\Product;
@@ -17,7 +17,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with(["department", 'materials'])->paginate(6);
+        $products = Product::with(["department", 'materials'])->orderBy("id")->paginate(6);
         $canDeleteProducts = [];
         $canUpdateProducts = [];
 
@@ -41,7 +41,7 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ProductStoreRequest $request)
+    public function store(ProductRequest $request)
     {
         \Gate::authorize('create', Product::class);
 
@@ -60,9 +60,20 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ProductRequest $request, Product $product)
     {
-        //
+        \Gate::authorize('update', $product);
+
+        $data = $request->validated();
+
+        $product->update([
+            "name" => $data['name'],
+            "price" => $data['price'],
+            "department_id" => $data['department_id'],
+        ]);
+        $product->materials()->syncWithoutDetaching($data['materials_id']);
+
+        return back();
     }
 
     /**

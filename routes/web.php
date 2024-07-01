@@ -102,6 +102,7 @@ Route::middleware(RedirectToLoginIfNotLogin::class)->group(function () {
         Route::get("/products", "index")->name("products.index");
         Route::delete("/products/{product}", "destroy")->name("products.destroy");
         Route::post("/products", "store")->name("products.store");
+        Route::put("/products/{product}", "update")->name("products.update");
     });
 });
 
