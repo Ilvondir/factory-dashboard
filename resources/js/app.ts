@@ -15,6 +15,8 @@ import "./styles/app.css";
 
 import {connectToLogs, initializeEcho} from "@/echo";
 
+import "vue-multiselect/dist/vue-multiselect.css"
+
 createInertiaApp({
     resolve: name => {
         // @ts-ignore

@@ -69,7 +69,7 @@
             <strong>Password</strong>: password<br>
         </p>
 
-        <a href="http://localhost:8000/login" target="_blank" style="text-decoration: none">
+        <a href="{{ request()->schemeAndHttpHost() }}" target="_blank" style="text-decoration: none">
             <div class="button">
                 Login to dashboard
             </div>

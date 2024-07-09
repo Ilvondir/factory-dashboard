@@ -5,12 +5,14 @@ namespace App\Providers;
 use App\Models\Department;
 use App\Models\Material;
 use App\Models\Position;
+use App\Models\Product;
 use App\Models\Session;
 use App\Models\User;
 use App\Models\Worker;
 use App\Policies\DepartmentPolicy;
 use App\Policies\MaterialPolicy;
 use App\Policies\PositionPolicy;
+use App\Policies\ProductPolicy;
 use App\Policies\UserPolicy;
 use App\Policies\WorkerPolicy;
 use Illuminate\Support\Facades\Gate;
@@ -45,5 +47,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('destroySession', function (User $user, Session $session) {
             return $user->id == $session->user_id && $session->id !== session()->getId();
         });
+
+        Gate::policy(Product::class, ProductPolicy::class);
     }
 }
