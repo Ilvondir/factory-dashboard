@@ -9,6 +9,7 @@ use App\Models\Product;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ProductController extends Controller
 {
@@ -85,5 +86,11 @@ class ProductController extends Controller
         \Gate::authorize('delete', $product);
         Product::destroy($product->id);
         return back();
+    }
+
+    public function generatePDF(Product $product)
+    {
+        $pdf = Pdf::loadView('pdf.product', ["product" => $product]);
+        return $pdf->download('product-' . $product->name . '.pdf');
     }
 }

@@ -218,6 +218,12 @@ onMounted(() => {
 
                     <div class="card-footer">
                         <div class="text-end w-100">
+                            <a :href="'products/' + selectedProduct.id + '/pdf'"
+                               v-if="Object.keys(selectedProduct).length > 0"
+                               class="btn btn-success me-2">
+                                <i class="bi bi-filetype-pdf"></i> Download report
+                            </a>
+
                             <button class="btn btn-primary me-1"
                                     v-if="canUpdateProducts[products.data.indexOf(selectedProduct)]"
                                     data-bs-toggle="modal" data-bs-target="#updateModal"
