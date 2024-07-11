@@ -6,6 +6,7 @@ use App\Models\Department;
 use App\Models\Worker;
 use App\Http\Requests\WorkerRequest;
 use App\Http\Requests\UpdateWorkerRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Response;
 use Inertia\Inertia;
@@ -18,9 +19,16 @@ class WorkerController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $workers = Worker::with("position.department")->orderBy("id")->paginate(10);
+        $searchQuery = $request->input("query");
+
+        $workers = Worker::with("position.department")
+            ->orWhere("first_name", "LIKE", "%{$searchQuery}%")
+            ->orWhere("last_name", "LIKE", "%{$searchQuery}%")
+            ->orWhere("email", "LIKE", "%{$searchQuery}%")
+            ->orderBy("id")
+            ->paginate(10);
 
         $canEditWorkers = [];
         $canDeleteWorkers = [];
