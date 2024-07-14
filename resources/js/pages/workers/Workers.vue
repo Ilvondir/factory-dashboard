@@ -14,6 +14,8 @@ const workerToAdd = ref(new InputWorker() as InputWorker);
 const localErrors = ref({} as InputWorker);
 const workerToEdit = ref({} as InputWorker);
 
+const searchInput = ref("" as string);
+const url = ref(new URL(window.location.href).searchParams);
 
 const props = defineProps<{
     workers: Pagination<Worker>,
@@ -72,6 +74,22 @@ const handleUpdate = () => {
     })
 }
 
+const handleSearch = () => {
+    if (searchInput.value.length > 0) {
+        let url = new URL(window.location.href);
+        url.searchParams.set('query', searchInput.value);
+        url.searchParams.delete('page');
+
+        router.get(url.toString(), {}, {preserveScroll: true});
+    } else {
+        let url = new URL(window.location.href);
+        url.searchParams.delete('query');
+        url.searchParams.delete('page');
+
+        router.get(url.toString(), {}, {preserveScroll: true});
+    }
+}
+
 onMounted(() => {
     console.log(props);
 })
@@ -96,19 +114,30 @@ onMounted(() => {
 
         <strong>You can click on the worker you are interested in to read more details.</strong>
 
-        <div class="d-flex justify-content-end mb-3 mt-3">
-            <a href="/workers/csv" class="btn btn-success" download>
-                <i class="bi bi-filetype-csv"></i> Download workers data
-            </a>
+        <div class="d-flex mb-3 mt-3 justify-content-between">
+
+            <div class="input-group w-25">
+                <input type="text" class="form-control" v-model="searchInput" placeholder="Search...">
+                <button @click="handleSearch" class="input-group-text btn btn-primary"
+                        id="btnGroupAddon">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div>
+
+            <div>
+                <a href="/workers/csv" class="btn btn-success" download>
+                    <i class="bi bi-filetype-csv"></i> Download workers data
+                </a>
 
 
-            <button class="btn btn-primary ms-2"
-                    data-bs-toggle="modal"
-                    v-if="canCreateWorkers"
-                    data-bs-target="#createModal"
-                    @click="() => localErrors = {} as InputWorker">
-                <i class="bi bi-plus-lg"></i> Add new worker
-            </button>
+                <button class="btn btn-primary ms-2"
+                        data-bs-toggle="modal"
+                        v-if="canCreateWorkers"
+                        data-bs-target="#createModal"
+                        @click="() => localErrors = {} as InputWorker">
+                    <i class="bi bi-plus-lg"></i> Add new worker
+                </button>
+            </div>
         </div>
 
         <div class="overflow-x-scroll">
@@ -134,7 +163,8 @@ onMounted(() => {
             </table>
         </div>
 
-        <Paginator :items="workers"/>
+        <Paginator :items="workers"
+                   :query="url.get('query') !== null ? url.get('query').toString() : ''"/>
 
     </BasePage>
 
