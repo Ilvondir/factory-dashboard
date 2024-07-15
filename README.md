@@ -1,66 +1,70 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Factory Dashboard
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Factory Dashboard is a web application for factory management created using the Laravel framework. In addition to Laravel, Vue was also used. These frameworks were integrated using the Inertia framework that allows for building SPA applications despite following the MVC architecture. The application allows for managing and monitoring the system, sending notification emails, and generating various reports and files for further analysis. The application also utilizes web sockets. The application is created on a PostgreSQL database.
 
-## About Laravel
+The application logs operations performed by administrators and records each of them as logs, which are accessible to every user.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+The application allows generating files in several formats. Firstly, it enables generating a list of factory employees in CSV format. It also allows exporting all system logs in JSON format. Additionally, the system can generate PDF reports of products manufactured in the factory. For these operations, the application uses the League\CSV and DOMPDF libraries.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Creating a new user in the system involves sending them an email notification that their account has been created. The email contains the user's login credentials. The email is sent using SMTP from a specified Gmail account.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Administrators receive real-time notifications about actions in the system. This was achieved using web sockets, which operate on a Pusher server. The notification messages themselves were implemented using Vue-Toastification.
 
-## Learning Laravel
+## Used Tools
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Backend
+- PHP 8.3.6
+- Laravel 11.7.0
+- Inertia.js 1.0.0
+- Laravel DOMPDF 2.2.0
+- Pusher 7.2.4
+- League\CSV 9.0.0
+- Sail 1.30.2
+- IDE Helper 3.0.0
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Frontend
+- HTML 5
+- CSS 3
+- TypeScript 5.5.3
+- Vue 3 (Inertia.js) 1.2.0
+- Bootstrap 5.3.3
+- Bootstrap Icons 1.11.3
+- Vue Toastification 2.0.0
+- Laravel Echo 1.16.1
+- Pusher.js 8.4.0
+- Vue-Multiselect 3.0.0
+- UAParser.js 1.0.38
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Requirements
 
-## Laravel Sponsors
+For running the application you need:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- [PHP](https://www.php.net/manual/en/install.windows.php)
+- [composer](https://getcomposer.org)
+- [PostgreSQL](https://www.postgresql.org.pl)
 
-### Premium Partners
+Or only:
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+- [Docker](https://www.docker.com)
 
-## Contributing
+## How to run
+1. Execute command `git clone https://github.com/Ilvondir/factory-dashboard`.
+2. Create `factory` database in PostgreSQL.
+3. Run `start.bat` file.
+4. If you want to use websocket-based notifications and send e-mails, complete your data in .env file.
+5. Log in to the selected account to discover various functionalities.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+| Account         | Email	              |   Password  |
+|:---------------:|:---------------------:|:-----------:|
+| Administrator   | admin@fd.com          |  password   | 
+| Viewer 	      | viewer@fd.com         |  password   |
 
-## Code of Conduct
+You can also run this app on Docker containers using Laravel Sail.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## First Look
+![firstlook1](public/firstlook/firstlook1.png?raw=true)
+![firstlook2](public/firstlook/firstlook2.png?raw=true)
+![firstlook3](public/firstlook/firstlook3.png?raw=true)
+![firstlook5](public/firstlook/firstlook5.png?raw=true)
+![firstlook4](public/firstlook/firstlook4.png?raw=true)
