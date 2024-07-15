@@ -5,9 +5,11 @@ namespace App\Models;
 use App\Traits\Loggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $name
@@ -34,16 +36,30 @@ class Position extends Model
 
     public $guarded = [];
 
-    public function department()
+    /**
+     * @return BelongsTo
+     */
+    public function department(): BelongsTo
     {
         return $this->belongsTo(Department::class);
     }
 
-    public function workers()
+    /**
+     * @return HasMany
+     */
+    public function workers(): HasMany
     {
         return $this->hasMany(Worker::class);
     }
 
+    /**
+     * Boot the model and add event listeners for created, updated, and deleted events.
+     *
+     * This method overrides the parent boot method and adds event listeners to log
+     * messages whenever a Position model is created, updated, or deleted.
+     *
+     * @return void
+     */
     protected static function boot()
     {
         parent::boot();

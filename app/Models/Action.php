@@ -4,9 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $name
@@ -28,7 +29,10 @@ class Action extends Model
     public $timestamps = false;
     public $guarded = [];
 
-    public function logs()
+    /**
+     * @return HasMany
+     */
+    public function logs(): HasMany
     {
         return $this->hasMany(Log::class);
     }

@@ -6,9 +6,10 @@ use App\Traits\Loggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $name
@@ -38,17 +39,19 @@ class Material extends Model
 
     public $guarded = [];
 
-    public function getCreatedAtAttribute($date)
+    /**
+     * @param $date
+     * @return string
+     */
+    public function getUpdatedAtAttribute($date): string
     {
         return Carbon\Carbon::parse($date)->format("d.m.Y, H:i:s");
     }
 
-    public function getUpdatedAtAttribute($date)
-    {
-        return Carbon\Carbon::parse($date)->format("d.m.Y, H:i:s");
-    }
-
-    public function products()
+    /**
+     * @return BelongsToMany
+     */
+    public function products(): BelongsToMany
     {
         //return $this->belongsToMany(RelatedModel, pivot_table_name, foreign_key_of_current_model_in_pivot_table, foreign_key_of_other_model_in_pivot_table);
         return $this->belongsToMany(Product::class, "products_materials", "material_id", "product_id");

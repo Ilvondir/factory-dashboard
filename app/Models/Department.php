@@ -5,9 +5,10 @@ namespace App\Models;
 use App\Traits\Loggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $name
@@ -30,17 +31,31 @@ class Department extends Model
     public $timestamps = false;
     public $guarded = [];
 
-    public function positions()
+    /**
+     * @return HasMany
+     */
+    public function positions(): HasMany
     {
         return $this->hasMany(Position::class);
     }
 
-    public function products()
+    /**
+     * @return HasMany
+     */
+    public function products(): HasMany
     {
         return $this->hasMany(Product::class);
     }
 
-    protected static function boot()
+    /**
+     * Boot the model and add event listeners for created, updated, and deleted events.
+     *
+     * This method overrides the parent boot method and adds event listeners to log
+     * messages whenever a Department model is created, updated, or deleted.
+     *
+     * @return void
+     */
+    protected static function boot(): void
     {
         parent::boot();
         static::created(function ($model) {

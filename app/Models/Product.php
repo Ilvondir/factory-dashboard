@@ -5,9 +5,11 @@ namespace App\Models;
 use App\Traits\Loggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $name
@@ -33,7 +35,14 @@ class Product extends Model
     public $timestamps = false;
     public $guarded = [];
 
-
+    /**
+     * Boot the model and add event listeners for created, updated, and deleted events.
+     *
+     * This method overrides the parent boot method and adds event listeners to log
+     * messages whenever a Product model is created, updated, or deleted.
+     *
+     * @return void
+     */
     protected static function boot()
     {
         parent::boot();
@@ -48,12 +57,18 @@ class Product extends Model
         });
     }
 
-    public function department()
+    /**
+     * @return BelongsTo
+     */
+    public function department(): BelongsTo
     {
         return $this->belongsTo(Department::class);
     }
 
-    public function materials()
+    /**
+     * @return BelongsToMany
+     */
+    public function materials(): BelongsToMany
     {
         //return $this->belongsToMany(RelatedModel, pivot_table_name, foreign_key_of_current_model_in_pivot_table, foreign_key_of_other_model_in_pivot_table);
         return $this->belongsToMany(Material::class, "products_materials", "product_id", "material_id");

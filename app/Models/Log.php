@@ -6,9 +6,10 @@ use App\Events\NewLogEvent;
 use App\Traits\Loggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $operation
@@ -37,7 +38,15 @@ class Log extends Model
     public $guarded = [];
 
 
-    protected static function boot()
+    /**
+     * Boot the model and add event listeners for the created event.
+     *
+     * This method overrides the parent boot method and adds an event listener to broadcast
+     * a new log event whenever a Log model is created.
+     *
+     * @return void
+     */
+    protected static function boot(): void
     {
         parent::boot();
         static::created(function ($model) {
@@ -47,12 +56,18 @@ class Log extends Model
         });
     }
 
-    public function user()
+    /**
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function action()
+    /**
+     * @return BelongsTo
+     */
+    public function action(): BelongsTo
     {
         return $this->belongsTo(Action::class);
     }

@@ -5,11 +5,13 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Traits\Loggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $first_name
@@ -58,7 +60,15 @@ class User extends Authenticatable
         'password',
     ];
 
-    protected static function boot()
+    /**
+     * Boot the model and add event listeners for created, updated, and deleted events.
+     *
+     * This method overrides the parent boot method and adds event listeners to log
+     * messages whenever a User model is created or deleted.
+     *
+     * @return void
+     */
+    protected static function boot(): void
     {
         parent::boot();
         static::created(function ($model) {
@@ -69,17 +79,26 @@ class User extends Authenticatable
         });
     }
 
-    public function role()
+    /**
+     * @return BelongsTo
+     */
+    public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class);
     }
 
-    public function logs()
+    /**
+     * @return HasMany
+     */
+    public function logs(): HasMany
     {
         return $this->hasMany(Log::class);
     }
 
-    public function sessions()
+    /**
+     * @return HasMany
+     */
+    public function sessions(): HasMany
     {
         return $this->hasMany(Session::class);
     }

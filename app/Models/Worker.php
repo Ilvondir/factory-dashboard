@@ -6,9 +6,10 @@ use App\Casts\ContactCaster;
 use App\Traits\Loggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $first_name
@@ -45,12 +46,23 @@ class Worker extends Model
 
     public $guarded = [];
 
-    public function position()
+    /**
+     * @return BelongsTo
+     */
+    public function position(): BelongsTo
     {
         return $this->belongsTo(Position::class);
     }
 
-    protected static function boot()
+    /**
+     * Boot the model and add event listeners for created, updated, and deleted events.
+     *
+     * This method overrides the parent boot method and adds event listeners to log
+     * messages whenever a Worker model is created, updated, or deleted.
+     *
+     * @return void
+     */
+    protected static function boot(): void
     {
         parent::boot();
         static::created(function ($model) {

@@ -4,9 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $name
@@ -28,7 +29,10 @@ class Role extends Model
 
     public $guarded = [];
 
-    public function users()
+    /**
+     * @return HasMany
+     */
+    public function users(): HasMany
     {
         return $this->hasMany(User::class);
     }
