@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserCreateRequest;
 use App\Http\Requests\UserUpdateRequest;
+use App\Jobs\SendAccountCreatedMail;
 use App\Mail\AccountCreated;
 use App\Models\Log;
 use App\Models\Role;
@@ -47,8 +48,8 @@ class UserController extends Controller
         \Gate::authorize('create', User::class);
 
         $user = User::create($request->validated() + ['password' => \Hash::make('password')]);
-        
-        Mail::to($user->email)->sendNow(new AccountCreated($user));
+
+        SendAccountCreatedMail::dispatch($user);
 
         return back();
     }
