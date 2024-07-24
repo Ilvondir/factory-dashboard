@@ -6,7 +6,7 @@ The application logs operations performed by administrators and records each of 
 
 The application allows generating files in several formats. Firstly, it enables generating a list of factory employees in CSV format. It also allows exporting all system logs in JSON format. Additionally, the system can generate PDF reports of products manufactured in the factory. For these operations, the application uses the League\CSV and DOMPDF libraries.
 
-Creating a new user in the system involves sending them an email notification that their account has been created. The email contains the user's login credentials. The email is sent using SMTP from a specified Gmail account.
+Creating a new user in the system involves sending them an email notification that their account has been created. The email contains the user's login credentials. The email is sent using SMTP from a specified Gmail account. The task of sending an email goes to the queue first. From there, the queue agent sends them asynchronously.
 
 Administrators receive real-time notifications about actions in the system. This was achieved using web sockets, which operate on a Pusher server. The notification messages themselves were implemented using Vue-Toastification.
 
